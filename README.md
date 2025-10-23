@@ -1,8 +1,8 @@
 # YardProProject
 ## WebApp Name: 
-GreenRoute
+YardPro
 ## WebApp Description: 
-GreenRoute is a full-stack web application designed to manage customer bookings, service scheduling, and internal employee routing for a modern lawn care business. It solves the inefficiency of manual scheduling and communication by providing distinct interfaces for Customers and Admin/Management. 
+YardPro is a full-stack web application designed to manage customer bookings, service scheduling, and internal employee routing for a modern lawn care business. It solves the inefficiency of manual scheduling and communication by providing distinct interfaces for Customers and Admin/Management. 
 Customers can quickly request and track services, while Admins can manage the service catalog, assign tasks to employees, and track billing status, ensuring an efficient "green route" for all services
 
 ## WebApp Functions & Pages:
