@@ -18,15 +18,17 @@ Pages for admin role: admin_requests.php, admin_services.php, admin_employees.ph
  
 #	Table Name	Data Elements (Fields)	Relationships
 1	Users	user_id (PK), email (UNIQUE), password_hash, is_admin (0/1), address, phone, session_count, last_login.	Master table for login credentials and roles.
+
 2	Service Types	service_type_id (PK), name, base_price, description.	Admin-managed catalog of services offered.
+
 3	Employees	employee\_id (PK), user\_id (FK to Users.user_id), 
 pay\_rate, hire\_date.	1:1 relationship with the Users table for employee-specific data.
+
 4	Service_Requests	request\_id (PK), customer\_id (FK to Users.user_id), 
 type\_id (FK to Service_Types.service_type_id), 
 employee\_id (FK to Employees.employee_id), schedule\_date, status (Pending/Scheduled/Completed).	Core data entity—requires complex JOINs to display information.
+
 5	Invoices	invoice\_id (PK), request\_id (FK to Service_Requests.request_id), amount\_due, date\_sent, paid\_status.	Billing data linked directly to a completed service request.
 
 The admin dashboard will execute a complex query over 4 tables to view the schedule: It will join Service_Requests to display the date and status, Users (via customer_id) to show the customer's name, Service_Types to show the service name, and Employees (via employee_id) to show who is assigned the task. -  Required JOIN Query
 
-
-<img width="468" height="616" alt="image" src="https://github.com/user-attachments/assets/13b89803-7241-47cc-a0ba-1c131d165777" />
