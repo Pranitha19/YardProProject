@@ -5,7 +5,7 @@ if ( !isset( $_SESSION[ 'role' ] ) || $_SESSION[ 'role' ] !== 'employee' ) {
     header( 'Location: login.php' );
     exit;
 }
-//Uses the logged-in employee’s ID to get their current info from the database
+//Uses the logged-in employee's ID to get their current info from the database
 $emp_id = $_SESSION[ 'user_id' ];
 
 // Fetch employee details
@@ -17,38 +17,38 @@ $emp = $stmt->fetch();
 <html>
 
 <head>
-<meta charset = 'utf-8'>
-<title>Edit Profile</title>
-<link href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel = 'stylesheet'>
+    <meta charset='utf-8'>
+    <title>Edit Profile</title>
+    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel='stylesheet'>
 </head>
 
-<body class = 'container py-5'>
-<h3>Edit Profile</h3>
-<!-- Allows updating name, phone, address, and optionally a new password. -->
-<form method = 'post' action = ''>
-<div class = 'mb-3'>
-<label>Name</label>
-<input type = 'text' name = 'name' class = 'form-control' value = "<?=htmlspecialchars($emp['name'])?>" required>
-</div>
-<div class = 'mb-3'>
-<label>Email ( cannot change )</label>
-<input type = 'email' class = 'form-control' value = "<?=htmlspecialchars($emp['email'])?>" readonly>
-</div>
-<div class = 'mb-3'>
-<label>Phone</label>
-<input type = 'text' name = 'phone' class = 'form-control' value = "<?=htmlspecialchars($emp['phone_no'])?>">
-</div>
-<div class = 'mb-3'>
-<label>Address</label>
-<input type = 'text' name = 'address' class = 'form-control' value = "<?=htmlspecialchars($emp['address'])?>">
-</div>
-<div class = 'mb-3'>
-<label>New Password ( optional )</label>
-<input type = 'password' name = 'new_password' class = 'form-control'>
-</div>
-<button type = 'submit' name = 'update' class = 'btn btn-success'>Save Changes</button>
-<a href = 'viewrequests.php' class = 'btn btn-secondary'>Cancel</a>
-</form>
+<body class='container py-5'>
+    <h3>Edit Profile</h3>
+    <!-- Allows updating name, phone, address, and optionally a new password. -->
+    <form method='post' action=''>
+        <div class='mb-3'>
+            <label>Name</label>
+            <input type='text' name='name' class='form-control' value="<?=htmlspecialchars($emp['name'])?>" required>
+        </div>
+        <div class='mb-3'>
+            <label>Email ( cannot change )</label>
+            <input type='email' class='form-control' value="<?=htmlspecialchars($emp['email'])?>" readonly>
+        </div>
+        <div class='mb-3'>
+            <label>Phone</label>
+            <input type='text' name='phone' class='form-control' value="<?=htmlspecialchars($emp['phone_no'])?>">
+        </div>
+        <div class='mb-3'>
+            <label>Address</label>
+            <input type='text' name='address' class='form-control' value="<?=htmlspecialchars($emp['address'])?>">
+        </div>
+        <div class='mb-3'>
+            <label>New Password ( optional )</label>
+            <input type='password' name='new_password' class='form-control'>
+        </div>
+        <button type='submit' name='update' class='btn btn-success'>Save Changes</button>
+        <a href='viewrequests.php' class='btn btn-secondary'>Cancel</a>
+    </form>
 </body>
 
 </html>
