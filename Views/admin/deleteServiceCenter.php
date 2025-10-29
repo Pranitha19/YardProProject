@@ -32,7 +32,10 @@ if ( isset( $_POST[ 'delete' ] ) ) {
 <select name = 'center_id' class = 'form-select mb-3' required>
 <option value = ''>Select Center</option>
 <?php foreach ( $centers as $c ): ?>
-<option value = "<?= $c['center_id'] ?>">< ?= htmlspecialchars( $c[ 'name' ] ) ?></option>
+<option value = "<?php echo $c['center_id']; ?>">
+<?php echo htmlspecialchars( $c[ 'name' ] );
+?>
+</option>
 <?php endforeach;
 ?>
 </select>

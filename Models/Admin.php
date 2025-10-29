@@ -1,8 +1,4 @@
 <?php
-/**
-* Admin Model
-* Uses hardcoded credentials ( no DB admin table )
-*/
 
 class Admin {
     private $email = 'admin@yardpro.com';

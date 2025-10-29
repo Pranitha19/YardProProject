@@ -33,10 +33,10 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
         global $pdo;
         // include created_at & image_url for downstream use if needed
         $stmt = $pdo->query(
-            "SELECT center_id, name, email, phone_no, description, address,
-                    timings_note, base_price, image_url, created_at
-             FROM service_centers
-             ORDER BY center_id DESC"
+        "SELECT center_id, name, email, phone_no, description, address,
+                timings_note, base_price, image_url, created_at
+                FROM service_centers
+                ORDER BY center_id DESC"
         );
         return $stmt->fetchAll();
     }
@@ -45,11 +45,8 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 
     public function updateServiceCenter( $data ) {
         global $pdo;
-        $stmt = $pdo->prepare(
-            "UPDATE service_centers
-             SET name = ?, email = ?, phone_no = ?, description = ?, address = ?,
-                 timings_note = ?, base_price = ?, image_url = ?
-             WHERE center_id = ?"
+$stmt = $pdo->prepare("UPDATE service_centers SET name = ?, email = ?, phone_no = ?, description = ?, address = ?,
+timings_note = ?, base_price = ?, image_url = ? WHERE center_id = ?"
         );
         return $stmt->execute( [
             $data[ 'name' ] ?? null,

@@ -1,8 +1,5 @@
 <?php
-/**
-* Admin Controller
-* Connects views to models
-*/
+/* Admin Controller. Connects views to models */
 require_once( __DIR__ . '/../models/Admin.php' );
 require_once( __DIR__ . '/../models/ServiceCenter.php' );
 
