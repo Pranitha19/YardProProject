@@ -15,7 +15,7 @@ $centers = $controller->getAllCenters();
     <meta charset="UTF-8">
     <title>Admin Dashboard - YardPro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Link your custom CSS -->
+    <!-- Our custom CSS is styles.css-->
     <link href="../../Static/css/styles.css" rel="stylesheet">
 </head>
 
@@ -26,14 +26,14 @@ $centers = $controller->getAllCenters();
         <div class="container-fluid">
             <a class="navbar-brand fw-bold text-white" href="home.php">YardPro Admin</a>
 
-            <!-- 🔍 Search Bar -->
+            <!-- Search Bar -->
             <form class="d-flex ms-auto me-3" method="GET" action="">
                 <input class="form-control search-input" type="search" name="q" placeholder="Search centers..."
                     value="<?= isset($_GET['q']) ? htmlspecialchars($_GET['q']) : '' ?>">
                 <button class="search-btn ms-2" type="submit">Go</button>
             </form>
 
-            <!-- 🔗 Navbar Links -->
+            <!-- Navbar Links -->
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" href="addServiceCenter.php">Add</a></li>
                 <li class="nav-item"><a class="nav-link" href="editServiceCenter.php">Edit</a></li>
@@ -45,22 +45,21 @@ $centers = $controller->getAllCenters();
         </div>
     </nav>
 
-    <!-- 🧩 Filter Results -->
+    <!-- Filter Results -->
     <?php
 if (isset($_GET['q']) && !empty(trim($_GET['q']))) {
     $q = strtolower(trim($_GET['q']));
     $centers = array_filter($centers, function($c) use ($q) {
-        return strpos(strtolower($c['name']), $q) !== false ||
-               strpos(strtolower($c['description'] ?? ''), $q) !== false ||
-               strpos(strtolower($c['address'] ?? ''), $q) !== false;
+    return strpos(strtolower($c['name']), $q) !== false ||
+            strpos(strtolower($c['description'] ?? ''), $q) !== false ||
+            strpos(strtolower($c['address'] ?? ''), $q) !== false;
     });
-    echo "<div class='container mt-3'><div class='alert alert-info text-center'>
-            Showing results for: <strong>" . htmlspecialchars($_GET['q']) . "</strong>
-          </div></div>";
+echo "<div class='container mt-3'><div class='alert alert-info text-center'>Showing results for: <strong>" . htmlspecialchars($_GET['q']) . "</strong>
+</div></div>";
 }
 ?>
 
-    <!-- 🏡 Service Centers -->
+    <!-- Service Centers -->
     <div class="container mt-4">
         <h3 class="text-success text-center mb-4">Service Centers Overview</h3>
         <?php if (count($centers) > 0): ?>
