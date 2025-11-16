@@ -66,7 +66,9 @@ if ( isset( $_POST[ 'change_password' ] ) ) {
 <form method = 'POST'>
 <input name = 'name' class = 'form-control mb-3' value = "<?= htmlspecialchars($employee['name']) ?>" required>
 <input name = 'phone_no' class = 'form-control mb-3' value = "<?= htmlspecialchars($employee['phone_no']) ?>">
-<textarea name = 'address' class = 'form-control mb-3'>< ?= htmlspecialchars( $employee[ 'address' ] ) ?></textarea>
+<textarea name = 'address'
+
+class = 'form-control mb-3'>< ?= htmlspecialchars( $employee[ 'address' ] ) ?></textarea>
 
 <button name = 'save' class = 'btn btn-success'>Save Changes</button>
 </form>

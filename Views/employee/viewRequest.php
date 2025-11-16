@@ -49,11 +49,20 @@ $requests = $controller->getAssignedRequests( $employee_id );
 <tbody>
 <?php foreach ( $requests as $r ): ?>
 <tr>
-<td>< ?= $r[ 'booking_id' ] ?></td>
-<td>< ?= htmlspecialchars( $r[ 'firstname' ].' '.$r[ 'lastname' ] ) ?></td>
-<td>< ?= htmlspecialchars( $r[ 'service_name' ] ) ?></td>
-<td>$< ?= $r[ 'price' ] ?></td>
-<td>< ?= htmlspecialchars( $r[ 'status' ] ) ?></td>
+<td>
+< ?= $r[ 'booking_id' ] ?>
+</td>
+<td>
+< ?= htmlspecialchars( $r[ 'firstname' ].' '.$r[ ' lastname' ] ) ?>
+</td>
+<td>
+< ?= htmlspecialchars( $r[ 'service_name' ] ) ?>
+</td>
+<td>$< ?= $r[ 'price' ] ?>
+</td>
+<td>
+< ?= htmlspecialchars( $r[ 'status' ] ) ?>
+</td>
 </tr>
 <?php endforeach;
 ?>
