@@ -1,85 +1,54 @@
 <?php
-// we start a session first so we can remember the logged-in user.
 session_start();
+require_once( '../../Controllers/UserController.php' );
 
-//require_once connects to our database from pdo.php using PDO. 
-require_once __DIR__ . '/../../config/pdo.php';
+$controller = new UserController();
 
-// If an employee is already logged in, they shouldn’t see the login page again.
-// So this redirects them straight to their dashboard (viewrequests.php).
-if (isset($_SESSION['role']) && $_SESSION['role'] === 'employee') {
-    header("Location: viewrequests.php");
-    exit;
+if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
+    $email    = $_POST[ 'email' ];
+    $password = $_POST[ 'password' ];
+
+    $emp = $controller->employeeLogin( $email, $password );
+
+    if ( $emp ) {
+        $_SESSION[ 'employee_logged_in' ] = true;
+        $_SESSION[ 'employee_id' ] = $emp[ 'employee_id' ];
+        $_SESSION[ 'employee_name' ] = $emp[ 'name' ];
+
+        header( 'Location: viewRequest.php' );
+        exit();
+    } else {
+        $error = 'Invalid email or password!';
+    }
 }
-
-//A simple form with email and password fields. When “Login” is clicked, 
-// it sends data to the same page (action="").
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <title>Employee Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<meta charset = 'UTF-8'>
+<title>Employee Login - YardPro</title>
+<link href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel = 'stylesheet'>
+<link href = '../../Static/css/styles.css' rel = 'stylesheet'>
 </head>
 
-<body class="container py-5">
-    <h3>Employee Login</h3>
-    <form method="post" action="" id="loginForm" class="w-50">
-        <div class="mb-3">
-            <label>Email</label>
-            <input type="email" name="email" id="email" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label>Password</label>
-            <input type="password" name="password" id="password" class="form-control" required minlength="6">
-        </div>
-        <button type="submit" name="login" class="btn btn-primary">Login</button>
-    </form>
+<body class = 'auth-bg'>
 
-    <script>
-    // Simple jQuery validation - Before submitting the form, this checks that email isn't
-    // blank and password has at least 6 characters.It's just for user convenience (real validation happens in PHP below).
-    $(function() {
-        $('#loginForm').on('submit', function(e) {
-            let email = $('#email').val().trim();
-            let pw = $('#password').val();
-            if (email === '' || pw.length < 6) {
-                e.preventDefault();
-                alert("Please enter a valid email and password (min 6 chars).");
-            }
-        });
-    });
-    </script>
+<div class = 'container d-flex justify-content-center align-items-center vh-100'>
+<div class = 'card p-4 shadow auth-card'>
+<h3 class = 'text-center text-success mb-3'>Employee Login</h3>
+
+<?php if ( !empty( $error ) ) echo "<div class='alert alert-danger'>$error</div>";
+?>
+
+<form method = 'POST'>
+<input name = 'email' type = 'email' class = 'form-control mb-3' placeholder = 'Email' required>
+<input name = 'password' type = 'password' class = 'form-control mb-3' placeholder = 'Password' required>
+<button class = 'btn btn-success w-100'>Login</button>
+</form>
+</div>
+</div>
+
 </body>
 
 </html>
-
-<?php
-//Checks if the form was submitted.Reads user input.Queries the employees table
-//  for that email
-if(isset($_POST['login'])){
-    $email = trim($_POST['email']);
-    $password = $_POST['password'];
-
-    $stmt = $pdo->prepare("SELECT * FROM employees WHERE email=? LIMIT 1");
-    $stmt->execute([$email]);
-    $emp = $stmt->fetch();
-
-//password_verify() checks if the entered password matches the hashed one stored 
-// in the database.If yes, we create a secure session and redirect to the dashboard.
-    if($emp && password_verify($password, $emp['password_hash'])){
-        session_regenerate_id(true);
-        $_SESSION['user_id'] = $emp['employee_id'];
-        $_SESSION['role'] = 'employee';
-        $_SESSION['user_name'] = $emp['name'];
-        header("Location: viewrequests.php");
-        exit;
-        // If not,will display an error message.
-    } else {
-        echo "<p class='text-danger mt-3'>Invalid email or password!</p>";
-    }
-}
-?>

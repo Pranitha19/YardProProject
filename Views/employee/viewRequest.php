@@ -1,86 +1,73 @@
 <?php
-//Shows the employee all their assigned bookings.
 session_start();
-require_once __DIR__ . '/../../config/pdo.php';
-if ( !isset( $_SESSION[ 'role' ] ) || $_SESSION[ 'role' ] !== 'employee' ) {
+if ( !isset( $_SESSION[ 'employee_logged_in' ] ) ) {
     header( 'Location: login.php' );
-    exit;
+    exit();
 }
 
-$emp_id = $_SESSION[ 'user_id' ];
-/* Finds all bookings that belong to the logged-in employee.
-Also joins service center names. */
+require_once( '../../Controllers/UserController.php' );
+$controller = new UserController();
 
-$stmt = $pdo->prepare( "SELECT b.booking_id, b.service_name, b.status, b.scheduled_for, sc.name AS center_name
-                FROM bookings b
-                LEFT JOIN service_centers sc ON b.center_id = sc.center_id
-                WHERE b.employee_id = ? ORDER BY b.created_at DESC" );
-$stmt->execute( [ $emp_id ] );
-$requests = $stmt->fetchAll();
+$employee_id = $_SESSION[ 'employee_id' ];
+$requests = $controller->getAssignedRequests( $employee_id );
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
-<meta charset = 'utf-8'>
-<title>View Assigned Requests</title>
+<meta charset = 'UTF-8'>
+<title>My Requests - YardPro</title>
 <link href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel = 'stylesheet'>
+<link href = '../../Static/css/styles.css' rel = 'stylesheet'>
 </head>
 
-<body class = 'container py-4'>
-<div class = 'd-flex justify-content-between mb-3'>
-<h3>Assigned Requests</h3>
-<div>
-<a href = 'editprofile.php' class = 'btn btn-outline-primary btn-sm'>Edit Profile</a>
-<a href = 'logout.php' class = 'btn btn-outline-danger btn-sm'>Logout</a>
-</div>
-</div>
+<body>
 
-<table class = 'table table-bordered'>
-<thead>
+<nav class = 'navbar navbar-dark navbar-expand-lg' style = 'background:#2e7d32;'>
+<div class = 'container-fluid'>
+<a class = 'navbar-brand fw-bold' href = 'viewRequest.php'>YardPro Employee</a>
+<ul class = 'navbar-nav ms-auto'>
+<li class = 'nav-item'><a class = 'nav-link' href = 'editProfile.php'>Profile</a></li>
+<li class = 'nav-item'><a class = 'nav-link text-warning' href = 'logout.php'>Logout</a></li>
+</ul>
+</div>
+</nav>
+
+<div class = 'container mt-4'>
+<h3 class = 'text-success mb-3'>Assigned Requests</h3>
+
+<table class = 'table table-bordered table-hover'>
+<thead class = 'table-success'>
 <tr>
-<th>ID</th>
-<th>Service</th>
-<th>Center</th>
-<th>Scheduled</th>
+<th>Booking ID</th>
+<th>User</th>
+<th>Service Center</th>
+<th>Price</th>
 <th>Status</th>
-<th>Action</th>
 </tr>
 </thead>
 <tbody>
 <?php foreach ( $requests as $r ): ?>
 <tr>
-<td>
-< ?= $r[ 'booking_id' ]?>
-</td>
-<td>
-< ?= htmlspecialchars( $r[ 'service_name' ] )?>
-</td>
-<td>
-< ?= htmlspecialchars( $r[ 'center_name' ] )?>
-</td>
-<td>
-< ?= $r[ 'scheduled_for' ]?>
-</td>
-<td>
-< ?= $r[ 'status' ]?>
-</td>
-<td>
-<form method = 'post' action = 'updatestatus.php' class = 'd-flex gap-1'>
-<input type = 'hidden' name = 'booking_id' value = "<?=$r['booking_id']?>">
-<select name = 'status' class = 'form-select form-select-sm'>
-<option value = 'InProgress'>In Progress</option>
-<option value = 'Completed'>Completed</option>
-<option value = 'Cancelled'>Cancelled</option>
-</select>
-<button type = 'submit' class = 'btn btn-sm btn-success'>Update</button>
-</form>
-</td>
+<td>< ?= $r[ 'booking_id' ] ?></td>
+<td>< ?= htmlspecialchars( $r[ 'firstname' ].' '.$r[ 'lastname' ] ) ?></td>
+<td>< ?= htmlspecialchars( $r[ 'service_name' ] ) ?></td>
+<td>$< ?= $r[ 'price' ] ?></td>
+<td>< ?= htmlspecialchars( $r[ 'status' ] ) ?></td>
 </tr>
 <?php endforeach;
 ?>
+
+<?php if ( empty( $requests ) ): ?>
+<tr>
+<td colspan = '5' class = 'text-center text-muted'>No assigned requests.</td>
+</tr>
+<?php endif;
+?>
 </tbody>
 </table>
+</div>
+
 </body>
 
 </html>
