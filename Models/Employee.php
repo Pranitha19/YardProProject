@@ -1,14 +1,12 @@
 <?php
 /**
-* Employee Model
-* Handles Employee authentication, profile updates, and job-related queries
+* Employee Model- Handles Employee authentication, profile updates, and job-related queries
 */
 require_once( __DIR__ . '/../config/pdo.php' );
 
 class Employee {
-    /* ------------------------------
-    Authenticate Employee Login
-    ------------------------------ */
+
+    // Authenticate Employee Login
 
     public function login( $email, $password ) {
         global $pdo;
@@ -37,9 +35,7 @@ class Employee {
         return $stmt->fetch();
     }
 
-    /* --------------------------------
-    Update employee profile
-    --------------------------------- */
+    // Update employee profile
 
     public function updateProfile( $data ) {
         global $pdo;
@@ -56,9 +52,7 @@ class Employee {
         ] );
     }
 
-    /* -----------------------------------------
-    Update password
-    ------------------------------------------ */
+    // Update password
 
     public function updatePassword( $employee_id, $newPass ) {
         global $pdo;
@@ -69,20 +63,18 @@ class Employee {
         ->execute( [ $hash, $employee_id ] );
     }
 
-    /* -----------------------------------------
-    Assigned bookings for employee ( viewRequest.php )
-    ----------------------------------------- */
+    //Assigned bookings for employee ( viewRequest.php )
 
     public function getAssignedRequests( $employee_id ) {
         global $pdo;
 
         // Adjust table names if your bookings table differs
         $sql = "SELECT b.id AS booking_id,
-                       b.status,
-                       b.price,
-                       u.firstname,
-                       u.lastname,
-                       s.name AS service_name
+        b.status,
+        b.price,
+        u.firstname,
+        u.lastname,
+        s.name AS service_name
                 FROM bookings b
                 JOIN users u ON b.user_id = u.id
                 JOIN service_centers s ON b.servicecenter_id = s.center_id
@@ -94,9 +86,7 @@ class Employee {
         return $stmt->fetchAll();
     }
 
-    /* ------------------------------------
-    Update booking status
-    ------------------------------------ */
+    //Update booking status
 
     public function updateStatus( $booking_id, $employee_id, $status ) {
         global $pdo;
