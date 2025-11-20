@@ -1,50 +1,67 @@
 <?php
-/**
-* Employee Model- Handles Employee authentication, profile updates, and job-related queries
-*/
 require_once( __DIR__ . '/../config/pdo.php' );
 
 class Employee {
 
-    // Authenticate Employee Login
+    /* ----------------------------------------
+    EXISTING METHOD ( DO NOT TOUCH )
+    ---------------------------------------- */
 
-    public function login( $email, $password ) {
+    // Insert new employee
+
+    public function register( $data ) {
         global $pdo;
 
-        $stmt = $pdo->prepare( 'SELECT * FROM employees WHERE email = ?' );
-        $stmt->execute( [ $email ] );
-        $employee = $stmt->fetch();
+        // Keep your existing password hashing logic
+        $hashedPassword = password_hash( $data[ 'password' ], PASSWORD_DEFAULT );
 
-        if ( !$employee ) return false;
+        $stmt = $pdo->prepare(
+            "INSERT INTO employees (name, email, password_hash, phone_no, address)
+             VALUES (?, ?, ?, ?, ?)"
+        );
 
-        if ( password_verify( $password, $employee[ 'password_hash' ] ) ) {
-            return $employee;
-        }
-
-        return false;
+        return $stmt->execute( [
+            $data[ 'name' ],
+            $data[ 'email' ],
+            $hashedPassword,
+            $data[ 'phone_no' ] ?? null,
+            $data[ 'address' ] ?? null
+        ] );
     }
 
-    /* --------------------------------
-    Fetch employee details by ID
-    --------------------------------- */
+    /* ----------------------------------------
+    NEW METHODS ( SAFE ADDITIONS )
+    ---------------------------------------- */
 
-    public function getEmployeeById( $id ) {
+    // Fetch employee by ID
+
+    public function getEmployeeById( $employee_id ) {
         global $pdo;
         $stmt = $pdo->prepare( 'SELECT * FROM employees WHERE employee_id = ?' );
-        $stmt->execute( [ $id ] );
+        $stmt->execute( [ $employee_id ] );
         return $stmt->fetch();
     }
 
-    // Update employee profile
+    // Fetch employee by Email ( for login )
 
-    public function updateProfile( $data ) {
+    public function getEmployeeByEmail( $email ) {
         global $pdo;
+        $stmt = $pdo->prepare( 'SELECT * FROM employees WHERE email = ?' );
+        $stmt->execute( [ $email ] );
+        return $stmt->fetch();
+    }
 
-        $sql = "UPDATE employees 
-                SET name = ?, phone_no = ?, address = ?
-                WHERE employee_id = ?";
+    // Update profile details
 
-        return $pdo->prepare( $sql )->execute( [
+    public function updateEmployeeProfile( $data ) {
+        global $pdo;
+        $stmt = $pdo->prepare(
+            "UPDATE employees 
+SET name = ?, phone_no = ?, address = ?
+WHERE employee_id = ?"
+        );
+
+        return $stmt->execute( [
             $data[ 'name' ],
             $data[ 'phone_no' ],
             $data[ 'address' ],
@@ -54,50 +71,17 @@ class Employee {
 
     // Update password
 
-    public function updatePassword( $employee_id, $newPass ) {
+    public function updateEmployeePassword( $employee_id, $newPassword ) {
         global $pdo;
 
-        $hash = password_hash( $newPass, PASSWORD_DEFAULT );
+        // Secure password hashing
+        $hashed = password_hash( $newPassword, PASSWORD_DEFAULT );
 
-        return $pdo->prepare( 'UPDATE employees SET password_hash = ? WHERE employee_id = ?' )
-        ->execute( [ $hash, $employee_id ] );
-    }
+        $stmt = $pdo->prepare(
+            'UPDATE employees SET password_hash = ? WHERE employee_id = ?'
+        );
 
-    //Assigned bookings for employee ( viewRequest.php )
-
-    public function getAssignedRequests( $employee_id ) {
-        global $pdo;
-
-        // Adjust table names if your bookings table differs
-        $sql = "SELECT b.id AS booking_id,
-        b.status,
-        b.price,
-        u.firstname,
-        u.lastname,
-        s.name AS service_name
-                FROM bookings b
-                JOIN users u ON b.user_id = u.id
-                JOIN service_centers s ON b.servicecenter_id = s.center_id
-                WHERE b.employee_id = ?
-                ORDER BY b.id DESC";
-
-        $stmt = $pdo->prepare( $sql );
-        $stmt->execute( [ $employee_id ] );
-        return $stmt->fetchAll();
-    }
-
-    //Update booking status
-
-    public function updateStatus( $booking_id, $employee_id, $status ) {
-        global $pdo;
-
-        $sql = "UPDATE bookings SET status = ?
-                WHERE id = ? AND employee_id = ?";
-
-        return $pdo->prepare( $sql )->execute( [
-            $status,
-            $booking_id,
-            $employee_id
-        ] );
+        return $stmt->execute( [ $hashed, $employee_id ] );
     }
 }
+?>

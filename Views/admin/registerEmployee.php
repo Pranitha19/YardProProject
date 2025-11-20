@@ -1,52 +1,76 @@
 <?php
-/**
-* Register Employee Page
-* Inserts a new employee record ( uses password hashing )
-*/
-session_start();
-require_once( '../../Controllers/AdminController.php' );
-$admin = new AdminController();
+ini_set( 'display_errors', 1 );
+error_reporting( E_ALL );
 
-// Handle form submission
+session_start();
+require_once( '../../controllers/AdminController.php' );
+$controller = new AdminController();
+
 if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
-    if ( $admin->registerEmployee( $_POST ) ) {
-        $msg = 'Employee registered successfully!';
+
+    if ( empty( $_POST[ 'name' ] ) || empty( $_POST[ 'email' ] ) || empty( $_POST[ 'password' ] ) ) {
+        $error = 'Name, Email, and Password are required.';
     } else {
-        $error = 'Error registering employee!';
+        if ( $controller->registerEmployee( $_POST ) ) {
+            $msg = 'Employee registered successfully!';
+        } else {
+            $error = 'Error registering employee. Email may already exist.';
+        }
     }
 }
 ?>
 <!DOCTYPE html>
-<html lang = 'en'>
+<html lang='en'>
 
 <head>
-<meta charset = 'UTF-8'>
-<title>Register Employee</title>
-<link href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel = 'stylesheet'>
+    <meta charset='UTF-8'>
+    <title>Register Employee</title>
+    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='../../Static/css/styles.css' rel='stylesheet'>
 </head>
 
-<body class = 'bg-light'>
-<div class = 'container mt-5'>
-<h3 class = 'text-success mb-4'>Register New Employee</h3>
-<?php if ( !empty( $msg ) ) echo "<div class='alert alert-success'>$msg</div>";
-?>
-<?php if ( !empty( $error ) ) echo "<div class='alert alert-danger'>$error</div>";
+<body class='bg-light'>
+
+    <div class='container mt-5' style='max-width: 600px;'>
+        <h3 class='text-success mb-4'>Register New Employee</h3>
+
+        <?php if ( !empty( $msg ) ) : ?>
+        <div class='alert alert-success'>
+            <?= $msg ?>
+        </div>
+        <?php endif;
 ?>
 
-<form method = 'POST'>
-<div class = 'mb-3'><input type = 'text' name = 'name' class = 'form-control' placeholder = 'Full Name' required>
-</div>
-<div class = 'mb-3'><input type = 'email' name = 'email' class = 'form-control' placeholder = 'Email' required></div>
-<div class = 'mb-3'><input type = 'password' name = 'password' class = 'form-control' placeholder = 'Password'
-required></div>
-<div class = 'mb-3'><input type = 'text' name = 'phone_no' class = 'form-control' placeholder = 'Phone' required>
-</div>
-<div class = 'mb-3'><textarea name = 'address' class = 'form-control' placeholder = 'Address' required></textarea>
-</div>
-<button class = 'btn btn-success'>Register</button>
-<a href = 'home.php' class = 'btn btn-secondary'>Back</a>
-</form>
-</div>
+        <?php if ( !empty( $error ) ) : ?>
+        <div class='alert alert-danger'>
+            < ?=$error ?>
+        </div>
+        <?php endif;
+?>
+
+        <form method='POST'>
+
+            <label class='form-label'>Full Name *</label>
+            <input type='text' name='name' class='form-control mb-3' required>
+
+            <label class='form-label'>Email *</label>
+            <input type='email' name='email' class='form-control mb-3' required>
+
+            <label class='form-label'>Password *</label>
+            <input type='password' name='password' class='form-control mb-3' required>
+
+            <label class='form-label'>Phone No</label>
+            <input type='text' name='phone_no' class='form-control mb-3'>
+
+            <label class='form-label'>Address</label>
+            <textarea name='address' class='form-control mb-3'></textarea>
+
+            <button class='btn btn-success w-100'>Register Employee</button>
+            <a href='home.php' class='btn btn-secondary w-100 mt-3'>Back</a>
+
+        </form>
+    </div>
+
 </body>
 
 </html>

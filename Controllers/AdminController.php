@@ -1,15 +1,18 @@
 <?php
 /* Admin Controller. Connects views to models */
-require_once( __DIR__ . '/../models/Admin.php' );
-require_once( __DIR__ . '/../models/ServiceCenter.php' );
+require_once( __DIR__ . '/../Models/Admin.php' );
+require_once( __DIR__ . '/../Models/ServiceCenter.php' );
+require_once( __DIR__ . '/../Models/Employee.php' );
 
 class AdminController {
     private $adminModel;
     private $serviceCenterModel;
+    private $employeeModel;
 
     public function __construct() {
         $this->adminModel = new Admin();
         $this->serviceCenterModel = new ServiceCenter();
+        $this->employeeModel = new Employee();
     }
 
     public function login( $email, $password ) {
@@ -32,6 +35,10 @@ class AdminController {
 
     public function deleteServiceCenter( $center_id ) {
         return $this->serviceCenterModel->deleteServiceCenter( $center_id );
+    }
+
+    public function registerEmployee( $data ) {
+        return $this->employeeModel->register( $data );
     }
 }
 ?>

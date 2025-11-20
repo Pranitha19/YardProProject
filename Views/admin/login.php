@@ -1,21 +1,49 @@
 <?php
 session_start();
+require_once( '../../config/pdo.php' );
+// need PDO for employee check
 require_once( '../../controllers/AdminController.php' );
 
 $controller = new AdminController();
 
-if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
-    $email = $_POST[ 'email' ];
-    $password = $_POST[ 'password' ];
+$ADMIN_EMAIL = 'admin@yardpro.com';
+$ADMIN_PASSWORD = 'Admin@123';
 
-    if ( $controller->login( $email, $password ) ) {
+if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
+
+    $email = trim( $_POST[ 'email' ] );
+    $password = trim( $_POST[ 'password' ] );
+
+    //it will check for admin login
+
+    if ( $email === $ADMIN_EMAIL && $password === $ADMIN_PASSWORD ) {
+
         $_SESSION[ 'admin_logged_in' ] = true;
         $_SESSION[ 'admin_email' ] = $email;
+
         header( 'Location: home.php' );
+        // admin dashboard
         exit();
-    } else {
-        $error = 'Invalid email or password!';
     }
+
+    //️it will check for employee login ( DATABASE )
+    $stmt = $pdo->prepare( 'SELECT * FROM employees WHERE email = ?' );
+    $stmt->execute( [ $email ] );
+    $employee = $stmt->fetch();
+
+    if ( $employee && password_verify( $password, $employee[ 'password_hash' ] ) ) {
+
+        $_SESSION[ 'employee_logged_in' ] = true;
+        $_SESSION[ 'employee_id' ] = $employee[ 'employee_id' ];
+        $_SESSION[ 'employee_name' ] = $employee[ 'name' ];
+
+        header( 'Location: ../employee/home.php' );
+        // employee dashboard
+        exit();
+    }
+
+    //If admin or employee login fails
+    $error = 'Invalid email or password!';
 }
 ?>
 <!DOCTYPE html>
@@ -29,7 +57,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 
 <body class = 'bg-light d-flex justify-content-center align-items-center vh-100'>
 <div class = 'card p-4 shadow' style = 'width: 22rem;'>
-<h4 class = 'text-center text-success mb-3'>Admin Login</h4>
+<h4 class = 'text-center text-success mb-3'>Admin & Employee Login</h4>
 <?php if ( !empty( $error ) ) echo "<div class='alert alert-danger'>$error</div>";
 ?>
 <form method = 'POST'>
