@@ -7,9 +7,9 @@ if ( !isset( $_SESSION[ 'employee_logged_in' ] ) ) {
     exit();
 }
 
-$controller = new EmployeeController();
-
 if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
+
+    $controller = new EmployeeController();
 
     $controller->updateRequestStatus(
         $_POST[ 'booking_id' ],
@@ -18,5 +18,6 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
     );
 
     header( 'Location: home.php' );
+    // PRG redirect
     exit();
 }

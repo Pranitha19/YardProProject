@@ -1,13 +1,13 @@
 <?php
 session_start();
+require_once '../../controllers/EmployeeController.php';
+
 if ( !isset( $_SESSION[ 'employee_logged_in' ] ) ) {
-    header( 'Location: login.php' );
+    header( 'Location: ../admin/login.php' );
     exit();
 }
 
-require_once( '../../Controllers/UserController.php' );
-$controller = new UserController();
-
+$controller = new EmployeeController();
 $employee = $controller->getEmployee( $_SESSION[ 'employee_id' ] );
 
 if ( isset( $_POST[ 'save' ] ) ) {
@@ -20,8 +20,9 @@ if ( isset( $_POST[ 'save' ] ) ) {
 
     if ( $controller->updateEmployeeProfile( $data ) ) {
         $msg = 'Profile updated!';
+        $employee = $controller->getEmployee( $_SESSION[ 'employee_id' ] );
     } else {
-        $error = 'Failed to update.';
+        $error = 'Failed to update profile.';
     }
 }
 
@@ -40,14 +41,13 @@ if ( isset( $_POST[ 'change_password' ] ) ) {
 <meta charset = 'UTF-8'>
 <title>Edit Profile - YardPro</title>
 <link href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel = 'stylesheet'>
-<link href = '../../Static/css/styles.css' rel = 'stylesheet'>
 </head>
 
 <body>
 
 <nav class = 'navbar navbar-dark navbar-expand-lg' style = 'background:#2e7d32;'>
 <div class = 'container-fluid'>
-<a class = 'navbar-brand fw-bold' href = 'viewRequest.php'>YardPro Employee</a>
+<a class = 'navbar-brand fw-bold' href = 'home.php'>YardPro Employee</a>
 <ul class = 'navbar-nav ms-auto'>
 <li class = 'nav-item'><a class = 'nav-link text-warning' href = 'logout.php'>Logout</a></li>
 </ul>
@@ -65,10 +65,10 @@ if ( isset( $_POST[ 'change_password' ] ) ) {
 
 <form method = 'POST'>
 <input name = 'name' class = 'form-control mb-3' value = "<?= htmlspecialchars($employee['name']) ?>" required>
-<input name = 'phone_no' class = 'form-control mb-3' value = "<?= htmlspecialchars($employee['phone_no']) ?>">
-<textarea name = 'address'
 
-class = 'form-control mb-3'>< ?= htmlspecialchars( $employee[ 'address' ] ) ?></textarea>
+<input name = 'phone_no' class = 'form-control mb-3' value = "<?= htmlspecialchars($employee['phone_no']) ?>">
+
+<textarea name = 'address' class = 'form-control mb-3'>< ?= htmlspecialchars( $employee[ 'address' ] ) ?></textarea>
 
 <button name = 'save' class = 'btn btn-success'>Save Changes</button>
 </form>
