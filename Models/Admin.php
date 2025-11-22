@@ -5,7 +5,6 @@ class Admin {
     private $password = 'Admin@123';
 
     public function login( $email, $password ) {
-        return ( $email === $this->email && $password === $this->password );
+        return  $email === $this->email && $password === $this->password ;
     }
 }
-?>

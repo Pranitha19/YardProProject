@@ -83,5 +83,11 @@ WHERE employee_id = ?"
 
         return $stmt->execute( [ $hashed, $employee_id ] );
     }
+
+    public function getAllEmployees() {
+        global $pdo;
+        return $pdo->query( 'SELECT * FROM employees ORDER BY name ASC' )->fetchAll();
+    }
+
 }
 ?>

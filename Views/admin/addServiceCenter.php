@@ -23,9 +23,13 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 <body class = 'bg-light'>
 <div class = 'container mt-5'>
 <h3 class = 'text-success mb-4'>Add Service Center</h3>
-<?php if ( !empty( $msg ) ) echo "<div class='alert alert-success'>$msg</div>";
+<?php if ( !empty( $msg ) ) {
+    echo "<div class='alert alert-success'>$msg</div>";
+}
 ?>
-<?php if ( !empty( $error ) ) echo "<div class='alert alert-danger'>$error</div>";
+<?php if ( !empty( $error ) ) {
+    echo "<div class='alert alert-danger'>$error</div>";
+}
 ?>
 
 <form method = 'POST'>

@@ -4,7 +4,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
     header('Location: login.php');
     exit();
 }
-require_once("../../controllers/AdminController.php");
+require_once ("../../controllers/AdminController.php");
 $controller = new AdminController();
 $centers = $controller->getAllCenters();
 ?>
@@ -15,13 +15,11 @@ $centers = $controller->getAllCenters();
     <meta charset="UTF-8">
     <title>Admin Dashboard - YardPro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Our custom CSS is styles.css-->
     <link href="../../Static/css/styles.css" rel="stylesheet">
 </head>
 
 <body>
-
-    <!-- Navbar -->
+    <!--Navbar section-->
     <nav class="navbar navbar-expand-lg shadow-sm">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold text-white" href="home.php">YardPro Admin</a>
