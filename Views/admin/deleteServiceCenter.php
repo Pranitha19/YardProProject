@@ -24,9 +24,13 @@ if ( isset( $_POST[ 'delete' ] ) ) {
 <body class = 'bg-light'>
 <div class = 'container mt-5'>
 <h3 class = 'text-danger mb-4'>Delete Service Center</h3>
-<?php if ( !empty( $msg ) ) echo "<div class='alert alert-success'>$msg</div>";
+<?php if ( !empty( $msg ) ) {
+    echo "<div class='alert alert-success'>$msg</div>";
+}
 ?>
-<?php if ( !empty( $error ) ) echo "<div class='alert alert-danger'>$error</div>";
+<?php if ( !empty( $error ) ) {
+    echo "<div class='alert alert-danger'>$error</div>";
+}
 ?>
 <form method = 'POST'>
 <select name = 'center_id' class = 'form-select mb-3' required>

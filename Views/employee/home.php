@@ -10,7 +10,7 @@ $controller = new EmployeeController();
 $bookings = $controller->getAssignedRequests( $_SESSION[ 'employee_id' ] );
 ?>
 <!DOCTYPE html>
-<html>
+<html lang = 'en'>
 
 <head>
 <title>Employee Dashboard - YardPro</title>

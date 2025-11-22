@@ -27,5 +27,27 @@ class Booking {
         $stmt = $pdo->prepare( $sql );
         return $stmt->execute( [ $status, $booking_id, $employee_id ] );
     }
+
+    //ADMIN: ASSIGN EMPLOYEE TO ANY BOOKING
+
+    public function adminAssignEmployee( $booking_id, $employee_id ) {
+        global $pdo;
+
+        $sql = 'UPDATE bookings SET employee_id = ? WHERE booking_id = ?';
+        $stmt = $pdo->prepare( $sql );
+
+        return $stmt->execute( [ $employee_id, $booking_id ] );
+    }
+
+    //ADMIN: UPDATE STATUS FOR ANY BOOKING
+
+    public function adminUpdateStatus( $booking_id, $status ) {
+        global $pdo;
+
+        $sql = 'UPDATE bookings SET status = ? WHERE booking_id = ?';
+        $stmt = $pdo->prepare( $sql );
+
+        return $stmt->execute( [ $status, $booking_id ] );
+    }
 }
 ?>

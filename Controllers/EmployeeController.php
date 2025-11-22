@@ -1,6 +1,6 @@
 <?php
-require_once( __DIR__ . '/../Models/Employee.php' );
-require_once( __DIR__ . '/../Models/Booking.php' );
+require_once __DIR__ . '/../Models/Employee.php' ;
+require_once __DIR__ . '/../Models/Booking.php' ;
 
 class EmployeeController {
 
@@ -12,7 +12,7 @@ class EmployeeController {
         $this->bookingModel  = new Booking();
     }
 
-    //EMPLOYEE PROFILE OPERATIONS
+    //Employee profile updates
 
     public function getEmployee( $employee_id ) {
         return $this->employeeModel->getEmployeeById( $employee_id );
@@ -26,7 +26,7 @@ class EmployeeController {
         return $this->employeeModel->updateEmployeePassword( $employee_id, $newPassword );
     }
 
-    //BOOKING OPERATIONS ( EMPLOYEE )
+    //Booking operations ( Employee side )
 
     public function getAssignedRequests( $employee_id ) {
         return $this->bookingModel->getRequestsByEmployee( $employee_id );
@@ -36,4 +36,3 @@ class EmployeeController {
         return $this->bookingModel->updateBookingStatus( $booking_id, $employee_id, $status );
     }
 }
-?>
