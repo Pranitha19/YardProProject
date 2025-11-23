@@ -14,6 +14,7 @@ require_once '../../config/pdo.php' ;
 
 $sql = "SELECT 
             b.booking_id,
+            b.employee_id,
             u.first_name,
             u.last_name,
             s.name AS center_name,
@@ -42,6 +43,16 @@ $bookings = $stmt->fetchAll();
 <body class='bg-light'>
     <div class='container mt-5'>
         <h3 class='text-success mb-4'>All Bookings</h3>
+        <?php if ( !empty( $_SESSION[ 'success_msg' ] ) ): ?>
+        <div class='alert alert-success'>
+            <?= $_SESSION[ 'success_msg' ];
+?>
+        </div>
+        <!-- clear flash -->
+        <?php unset( $_SESSION[ 'success_msg' ] );
+?>
+        <?php endif;
+?>
 
         <table class='table table-bordered table-hover'>
             <thead class='table-success'>
@@ -97,14 +108,14 @@ $bookings = $stmt->fetchAll();
                             </select>
                             <!-- Status dropdown -->
                             <select name='status' class='form-select form-select-sm mb-2'>
-                                <option value='Requested' <?=$b[ 'status' ]=='Requested' ?'selected':'' ?>>Requested
+                                <option value='Requested' <?=$b[ 'status' ] == 'Requested' ?'selected':'' ?>>Requested
                                 </option>
-                                <option value='Assigned' <?=$b[ 'status' ]=='Assigned' ?'selected':'' ?>>Assigned
+                                <option value='Assigned' <?=$b[ 'status' ] == 'Assigned' ?'selected':'' ?>>Assigned
                                 </option>
-                                <option value='InProgress' <?=$b[ 'status' ]=='InProgress' ?'selected':'' ?>>
+                                <option value='InProgress' <?=$b[ 'status' ] == 'InProgress' ?'selected':'' ?>>
                                     InProgress
                                 </option>
-                                <option value='Completed' <?=$b[ 'status' ]=='Completed' ?'selected':'' ?>>Completed
+                                <option value='Completed' <?=$b[ 'status' ] == 'Completed' ?'selected':'' ?>>Completed
                                 </option>
                             </select>
 
@@ -116,6 +127,12 @@ $bookings = $stmt->fetchAll();
                 <?php endforeach;
 ?>
             </tbody>
+            <script>
+            setTimeout(() => {
+                let alertBox = document.querySelector('.alert');
+                if (alertBox) alertBox.style.display = 'none';
+            }, 3000);
+            </script>
 
     </div>
 </body>

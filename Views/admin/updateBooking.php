@@ -1,9 +1,6 @@
 <?php
-ini_set( 'display_errors', 1 );
-error_reporting( E_ALL );
-
 session_start();
-require_once( '../../controllers/AdminController.php' );
+require_once '../../controllers/AdminController.php';
 
 if ( !isset( $_SESSION[ 'admin_logged_in' ] ) ) {
     header( 'Location: login.php' );
@@ -24,6 +21,10 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
     // Update status
     $controller->updateBookingStatus( $booking_id, $status );
 
+    // Success flash message
+    $_SESSION[ 'success_msg' ] = "Booking #$booking_id updated successfully!";
+
     header( 'Location: viewAllBookings.php' );
+    // PRG Redirect
     exit();
 }
