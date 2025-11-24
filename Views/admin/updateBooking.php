@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once '../../controllers/AdminController.php';
-
+require_once '../../helpers/flash.php';
 if ( !isset( $_SESSION[ 'admin_logged_in' ] ) ) {
     header( 'Location: login.php' );
     exit();

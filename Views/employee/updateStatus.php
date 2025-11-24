@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once '../../controllers/EmployeeController.php';
+require_once '../../helpers/flash.php';
+
 
 if ( !isset( $_SESSION[ 'employee_logged_in' ] ) ) {
     header( 'Location: ../admin/login.php' );
@@ -17,7 +19,8 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
         $_POST[ 'status' ]
     );
 
-    header( 'Location: home.php' );
-    // PRG redirect
+    setFlash('success', 'Status updated successfully!');
+    header('Location: home.php');
     exit();
+    // PRG redirect
 }

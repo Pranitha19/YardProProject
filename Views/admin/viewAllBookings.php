@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once( '../../controllers/AdminController.php' );
+require_once '../../helpers/flash.php';
 $admin = new AdminController();
 
 $employees = $admin->getAllEmployees();
@@ -12,7 +13,7 @@ if ( !isset( $_SESSION[ 'admin_logged_in' ] ) ) {
 
 require_once '../../config/pdo.php' ;
 
-$sql = "SELECT 
+$sql = "SELECT
             b.booking_id,
             b.employee_id,
             u.first_name,
@@ -43,17 +44,9 @@ $bookings = $stmt->fetchAll();
 <body class='bg-light'>
     <div class='container mt-5'>
         <h3 class='text-success mb-4'>All Bookings</h3>
-        <?php if ( !empty( $_SESSION[ 'success_msg' ] ) ): ?>
-        <div class='alert alert-success'>
-            <?= $_SESSION[ 'success_msg' ];
-?>
-        </div>
-        <!-- clear flash -->
-        <?php unset( $_SESSION[ 'success_msg' ] );
-?>
-        <?php endif;
-?>
 
+        <?php showFlash(); ?>
+    
         <table class='table table-bordered table-hover'>
             <thead class='table-success'>
                 <tr>
@@ -128,11 +121,15 @@ $bookings = $stmt->fetchAll();
 ?>
             </tbody>
             <script>
-            setTimeout(() => {
-                let alertBox = document.querySelector('.alert');
-                if (alertBox) alertBox.style.display = 'none';
-            }, 3000);
-            </script>
+setTimeout(() => {
+    let msg = document.querySelector('.flash-message');
+    if (msg) {
+        msg.style.opacity = "0";
+        setTimeout(() => msg.remove(), 500);
+    }
+}, 5000);
+</script>
+
 
     </div>
 </body>

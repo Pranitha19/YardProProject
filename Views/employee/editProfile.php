@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../../controllers/EmployeeController.php';
+require_once '../../helpers/flash.php';
 
 if ( !isset( $_SESSION[ 'employee_logged_in' ] ) ) {
     header( 'Location: ../admin/login.php' );
@@ -19,20 +20,26 @@ if ( isset( $_POST[ 'save' ] ) ) {
     ];
 
     if ( $controller->updateEmployeeProfile( $data ) ) {
-        $msg = 'Profile updated!';
+        setFlash('success', 'Profile updated!');
         $employee = $controller->getEmployee( $_SESSION[ 'employee_id' ] );
     } else {
-        $error = 'Failed to update profile.';
+        setFlash('danger', 'Failed to update.');
+
     }
 }
 
 if ( isset( $_POST[ 'change_password' ] ) ) {
     if ( $controller->updateEmployeePassword( $_SESSION[ 'employee_id' ], $_POST[ 'new_password' ] ) ) {
-        $passmsg = 'Password changed successfully!';
+        setFlash('success', 'Password changed successfully!');
+
     } else {
-        $passerror = 'Password change failed.';
-    }
+    setFlash('danger', 'Password change failed.');
+    header("Location: editProfile.php");
+    exit();
 }
+}
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -57,6 +64,8 @@ if ( isset( $_POST[ 'change_password' ] ) ) {
     <div class='container mt-4'>
 
         <h3 class='text-success mb-3'>Edit Profile</h3>
+        <?php showFlash(); ?>
+
 
         <?php if ( !empty( $msg ) ) echo "<div class='alert alert-success'>$msg</div>";
 ?>

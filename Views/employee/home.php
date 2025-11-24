@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once('../../controllers/EmployeeController.php');
+require_once '../../helpers/flash.php';
 
 // Employee security check
 if (!isset($_SESSION['employee_logged_in'])) {
@@ -36,7 +37,7 @@ $bookings = $controller->getAssignedRequests($_SESSION['employee_id']);
 
     <div class="container mt-4">
         <h3 class="text-success mb-3">My Assigned Bookings</h3>
-
+    <?php showFlash(); ?>
         <?php if (count($bookings) == 0): ?>
         <div class="alert alert-info">No assigned bookings yet.</div>
         <?php else: ?>
@@ -88,6 +89,15 @@ $bookings = $controller->getAssignedRequests($_SESSION['employee_id']);
 
         <?php endif; ?>
     </div>
+<script>
+setTimeout(() => {
+    let msg = document.querySelector('.flash-message');
+    if (msg) {
+        msg.style.opacity = "0";
+        setTimeout(() => msg.remove(), 500);
+    }
+}, 5000);
+</script>
 
 </body>
 
