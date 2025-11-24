@@ -4,9 +4,12 @@ if (!isset($_SESSION['admin_logged_in'])) {
     header('Location: login.php');
     exit();
 }
-require_once ("../../controllers/AdminController.php");
+
+require_once '../../controllers/AdminController.php';
+require_once '../../helpers/flash.php';
+
 $controller = new AdminController();
-$centers = $controller->getAllCenters();
+$centers    = $controller->getAllCenters();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,19 +22,16 @@ $centers = $controller->getAllCenters();
 </head>
 
 <body>
-    <!--Navbar section-->
     <nav class="navbar navbar-expand-lg shadow-sm">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold text-white" href="home.php">YardPro Admin</a>
 
-            <!-- Search Bar -->
             <form class="d-flex ms-auto me-3" method="GET" action="">
                 <input class="form-control search-input" type="search" name="q" placeholder="Search centers..."
                     value="<?= isset($_GET['q']) ? htmlspecialchars($_GET['q']) : '' ?>">
                 <button class="search-btn ms-2" type="submit">Go</button>
             </form>
 
-            <!-- Navbar Links -->
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" href="addServiceCenter.php">Add</a></li>
                 <li class="nav-item"><a class="nav-link" href="editServiceCenter.php">Edit</a></li>
@@ -43,51 +43,68 @@ $centers = $controller->getAllCenters();
         </div>
     </nav>
 
-    <!-- Filter Results -->
     <?php
-if (isset($_GET['q']) && !empty(trim($_GET['q']))) {
-    $q = strtolower(trim($_GET['q']));
-    $centers = array_filter($centers, function($c) use ($q) {
-    return strpos(strtolower($c['name']), $q) !== false ||
-            strpos(strtolower($c['description'] ?? ''), $q) !== false ||
-            strpos(strtolower($c['address'] ?? ''), $q) !== false;
-    });
-echo "<div class='container mt-3'><div class='alert alert-info text-center'>Showing results for: <strong>" . htmlspecialchars($_GET['q']) . "</strong>
-</div></div>";
-}
-?>
+    // Filter by search
+    if (isset($_GET['q']) && !empty(trim($_GET['q']))) {
+        $q = strtolower(trim($_GET['q']));
+        $centers = array_filter($centers, function ($c) use ($q) {
+            return strpos(strtolower($c['name']), $q) !== false
+                || strpos(strtolower($c['description'] ?? ''), $q) !== false
+                || strpos(strtolower($c['address'] ?? ''), $q) !== false;
+        });
 
-    <!-- Service Centers -->
+        echo "<div class='container mt-3'><div class='alert alert-info text-center'>Showing results for: <strong>" .
+             htmlspecialchars($_GET['q']) . "</strong></div></div>";
+    }
+    ?>
+
     <div class="container mt-4">
+        <?php showFlash(); ?>
+
         <h3 class="text-success text-center mb-4">Service Centers Overview</h3>
         <?php if (count($centers) > 0): ?>
-        <div class="row g-4">
-            <?php foreach ($centers as $center): ?>
-            <div class="col-md-4 col-sm-6">
-                <div class="card service-card shadow-sm">
-                    <img src="<?= !empty($center['image_url']) ? htmlspecialchars($center['image_url']) : '../../assets/images/default.jpg' ?>"
-                        alt="Center Image" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title"><?= htmlspecialchars($center['name']) ?></h5>
-                        <p class="card-text mb-1">
-                            <?= htmlspecialchars($center['description'] ?? 'No description available.') ?></p>
-                        <p class="timings mb-1"><strong>Timings:</strong>
-                            <?= htmlspecialchars($center['timings_note'] ?? 'N/A') ?></p>
-                        <p class="price mb-1">$<?= htmlspecialchars($center['base_price']) ?></p>
-                        <p class="text-muted mb-0"><small><strong>Address:</strong>
-                                <?= htmlspecialchars($center['address']) ?></small></p>
-                        <p class="text-muted mb-0"><small><strong>Created:</strong>
-                                <?= htmlspecialchars($center['created_at']) ?></small></p>
+            <div class="row g-4">
+                <?php foreach ($centers as $center): ?>
+                <div class="col-md-4 col-sm-6">
+                    <div class="card service-card shadow-sm">
+                        <img src="<?= !empty($center['image_url']) ? htmlspecialchars($center['image_url']) : '../../assets/images/default.jpg' ?>"
+                            alt="Center Image" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title"><?= htmlspecialchars($center['name']) ?></h5>
+                            <p class="card-text mb-1">
+                                <?= htmlspecialchars($center['description'] ?? 'No description available.') ?>
+                            </p>
+                            <p class="timings mb-1">
+                                <strong>Timings:</strong>
+                                <?= htmlspecialchars($center['timings_note'] ?? 'N/A') ?>
+                            </p>
+                            <p class="price mb-1">$<?= htmlspecialchars($center['base_price']) ?></p>
+                            <p class="text-muted mb-0">
+                                <small><strong>Address:</strong> <?= htmlspecialchars($center['address']) ?></small>
+                            </p>
+                            <p class="text-muted mb-0">
+                                <small><strong>Created:</strong> <?= htmlspecialchars($center['created_at']) ?></small>
+                            </p>
+                        </div>
                     </div>
                 </div>
+                <?php endforeach; ?>
             </div>
-            <?php endforeach; ?>
-        </div>
         <?php else: ?>
-        <div class="alert alert-warning text-center mt-4">No service centers found.</div>
+            <div class="alert alert-warning text-center mt-4">No service centers found.</div>
         <?php endif; ?>
     </div>
 
+    <script>
+    setTimeout(() => {
+        const msg = document.querySelector('.flash-message');
+        if (msg) {
+            msg.style.transition = "opacity 0.5s";
+            msg.style.opacity = "0";
+            setTimeout(() => msg.remove(), 500);
+        }
+    }, 3000);
+    </script>
 </body>
 
 </html>

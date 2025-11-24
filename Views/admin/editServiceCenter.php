@@ -1,20 +1,29 @@
 <?php
 session_start();
-require_once("../../controllers/AdminController.php");
-$controller = new AdminController();
-$centers = $controller->getAllCenters();
+require_once '../../controllers/AdminController.php';
+require_once '../../helpers/flash.php';
 
-// Handle update form submission
+if (!isset($_SESSION['admin_logged_in'])) {
+    header('Location: login.php');
+    exit();
+}
+
+$controller = new AdminController();
+$centers    = $controller->getAllCenters();
+
 if (isset($_POST['update'])) {
     if ($controller->updateServiceCenter($_POST)) {
-        $msg = "Service Center updated successfully!";
-        $centers = $controller->getAllCenters(); // refresh after update
+        setFlash('success', 'Service Center updated successfully!');
+        header('Location: editServiceCenter.php');
+        exit();
     } else {
-        $error = "Failed to update Service Center.";
+        setFlash('danger', 'Failed to update Service Center.');
+        header('Location: editServiceCenter.php');
+        exit();
     }
 }
 
-// Handle AJAX request to fetch center details by ID
+// AJAX center details
 if (isset($_GET['center_id']) && !empty($_GET['center_id'])) {
     $center_id = intval($_GET['center_id']);
     foreach ($centers as $c) {
@@ -39,27 +48,24 @@ if (isset($_GET['center_id']) && !empty($_GET['center_id'])) {
 <body class="bg-light">
     <div class="container mt-5">
         <h3 class="text-success mb-4">Edit Service Center</h3>
-        <?php if(!empty($msg)) echo "<div class='alert alert-success'>$msg</div>"; ?>
-        <?php if(!empty($error)) echo "<div class='alert alert-danger'>$error</div>"; ?>
 
-        <!-- 🧩 Select existing center -->
+        <?php showFlash(); ?>
+
         <form method="POST" id="editForm">
             <label class="form-label">Select Service Center</label>
             <select name="center_id" id="center_id" class="form-select mb-3" required>
                 <option value="">Choose...</option>
                 <?php foreach($centers as $c): ?>
-                <option value="<?= $c['center_id'] ?>">
-                    <?= htmlspecialchars($c['name']) ?> (ID: <?= $c['center_id'] ?>)
-                </option>
+                    <option value="<?= $c['center_id'] ?>">
+                        <?= htmlspecialchars($c['name']) ?> (ID: <?= $c['center_id'] ?>)
+                    </option>
                 <?php endforeach; ?>
             </select>
 
-            <!-- Prefilled fields -->
             <input name="name" id="name" class="form-control mb-2" placeholder="Name">
             <input name="email" id="email" class="form-control mb-2" placeholder="Email">
             <input name="phone_no" id="phone_no" class="form-control mb-2" placeholder="Phone">
-            <textarea name="description" id="description" class="form-control mb-2"
-                placeholder="Description"></textarea>
+            <textarea name="description" id="description" class="form-control mb-2" placeholder="Description"></textarea>
             <textarea name="address" id="address" class="form-control mb-2" placeholder="Address"></textarea>
             <input name="timings_note" id="timings_note" class="form-control mb-2" placeholder="Timings">
             <input name="base_price" id="base_price" class="form-control mb-2" placeholder="Base Price (e.g. 49.99)">
@@ -70,20 +76,17 @@ if (isset($_GET['center_id']) && !empty($_GET['center_id'])) {
         </form>
     </div>
 
-    <!-- 💡 jQuery to auto-fill fields -->
     <script>
-    $(document).ready(function() {
-        $("#center_id").on("change", function() {
+    $(document).ready(function () {
+        $("#center_id").on("change", function () {
             var id = $(this).val();
             if (id !== "") {
                 $.ajax({
                     url: "editServiceCenter.php",
                     method: "GET",
-                    data: {
-                        center_id: id
-                    },
+                    data: { center_id: id },
                     dataType: "json",
-                    success: function(data) {
+                    success: function (data) {
                         $("#name").val(data.name);
                         $("#email").val(data.email);
                         $("#phone_no").val(data.phone_no);
@@ -99,6 +102,15 @@ if (isset($_GET['center_id']) && !empty($_GET['center_id'])) {
             }
         });
     });
+
+    setTimeout(() => {
+        const msg = document.querySelector('.flash-message');
+        if (msg) {
+            msg.style.transition = "opacity 0.5s";
+            msg.style.opacity = "0";
+            setTimeout(() => msg.remove(), 500);
+        }
+    }, 3000);
     </script>
 </body>
 

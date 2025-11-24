@@ -1,17 +1,16 @@
 <?php
 session_start();
-require_once( '../../controllers/AdminController.php' );
-require_once '../../helpers/flash.php';
-$admin = new AdminController();
-
-$employees = $admin->getAllEmployees();
-// Admin security check
-if ( !isset( $_SESSION[ 'admin_logged_in' ] ) ) {
-    header( 'Location: login.php' );
+if (!isset($_SESSION['admin_logged_in'])) {
+    header('Location: login.php');
     exit();
 }
 
-require_once '../../config/pdo.php' ;
+require_once '../../controllers/AdminController.php';
+require_once '../../helpers/flash.php';
+require_once '../../config/pdo.php';
+
+$admin     = new AdminController();
+$employees = $admin->getAllEmployees();
 
 $sql = "SELECT
             b.booking_id,
@@ -29,26 +28,26 @@ $sql = "SELECT
         JOIN service_centers s ON b.center_id = s.center_id
         ORDER BY b.booking_id DESC";
 
-$stmt = $pdo->query( $sql );
+$stmt     = $pdo->query($sql);
 $bookings = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
-<html lang='en'>
+<html lang="en">
 
 <head>
-    <meta charset='UTF-8'>
+    <meta charset="UTF-8">
     <title>All Bookings</title>
-    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body class='bg-light'>
-    <div class='container mt-5'>
-        <h3 class='text-success mb-4'>All Bookings</h3>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h3 class="text-success mb-4">All Bookings</h3>
 
         <?php showFlash(); ?>
-    
-        <table class='table table-bordered table-hover'>
-            <thead class='table-success'>
+
+        <table class="table table-bordered table-hover">
+            <thead class="table-success">
                 <tr>
                     <th>ID</th>
                     <th>User</th>
@@ -58,80 +57,64 @@ $bookings = $stmt->fetchAll();
                     <th>Status</th>
                     <th>Scheduled For</th>
                     <th>Created At</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
 
             <tbody>
-            <tbody>
-                <?php foreach ( $bookings as $b ): ?>
+                <?php foreach ($bookings as $b): ?>
                 <tr>
-                    <td><?php echo $b[ 'booking_id' ];
-?></td>
-                    <td><?php echo htmlspecialchars( $b[ 'firstname' ] . ' ' . $b[ 'lastname' ] );
-?></td>
-                    <td><?php echo htmlspecialchars( $b[ 'center_name' ] );
-?></td>
-                    <td><?php echo htmlspecialchars( $b[ 'service_name' ] );
-?></td>
-                    <td>$<?php echo $b[ 'price' ];
-?></td>
-                    <td><?php echo htmlspecialchars( $b[ 'status' ] );
-?></td>
-                    <td><?php echo $b[ 'scheduled_for' ];
-?></td>
-                    <td><?php echo $b[ 'created_at' ];
-?></td>
+                    <td><?= $b['booking_id'] ?></td>
+                    <td><?= htmlspecialchars($b['first_name'] . ' ' . $b['last_name']) ?></td>
+                    <td><?= htmlspecialchars($b['center_name']) ?></td>
+                    <td><?= htmlspecialchars($b['service_name']) ?></td>
+                    <td>$<?= $b['price'] ?></td>
+                    <td><?= htmlspecialchars($b['status']) ?></td>
+                    <td><?= $b['scheduled_for'] ?></td>
+                    <td><?= $b['created_at'] ?></td>
 
-                    <!-- ACTION COLUMN -->
                     <td>
-                        <form method='POST' action='updateBooking.php'>
-                            <input type='hidden' name='booking_id' value="<?php echo $b['booking_id']; ?>">
+                        <form method="POST" action="updateBooking.php">
+                            <input type="hidden" name="booking_id" value="<?= $b['booking_id'] ?>">
 
-                            <!-- Employee dropdown -->
-                            <select name='employee_id' class='form-select form-select-sm mb-2'>
-                                <option value='' disabled selected>Select Employee</option>
-                                <?php foreach ( $employees as $emp ): ?>
-                                <option value="<?php echo $emp['employee_id']; ?>" <?php echo ( $b[ 'employee_id' ] == $emp[ 'employee_id' ] ) ? 'selected' : '';
-?>>
-                                    <?php echo htmlspecialchars( $emp[ 'name' ] );
-?>
-                                </option>
-                                <?php endforeach;
-?>
-                            </select>
-                            <!-- Status dropdown -->
-                            <select name='status' class='form-select form-select-sm mb-2'>
-                                <option value='Requested' <?=$b[ 'status' ] == 'Requested' ?'selected':'' ?>>Requested
-                                </option>
-                                <option value='Assigned' <?=$b[ 'status' ] == 'Assigned' ?'selected':'' ?>>Assigned
-                                </option>
-                                <option value='InProgress' <?=$b[ 'status' ] == 'InProgress' ?'selected':'' ?>>
-                                    InProgress
-                                </option>
-                                <option value='Completed' <?=$b[ 'status' ] == 'Completed' ?'selected':'' ?>>Completed
-                                </option>
+                            <select name="employee_id" class="form-select form-select-sm mb-2">
+                                <option value="">Unassigned</option>
+                                <?php foreach ($employees as $emp): ?>
+                                    <option value="<?= $emp['employee_id'] ?>"
+                                        <?= $b['employee_id'] == $emp['employee_id'] ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($emp['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
 
-                            <!-- Save button -->
-                            <button class='btn btn-success btn-sm w-100'>Save</button>
+                            <select name="status" class="form-select form-select-sm mb-2">
+                                <option value="Requested"   <?= $b['status']=='Requested'?'selected':'' ?>>Requested</option>
+                                <option value="Assigned"    <?= $b['status']=='Assigned'?'selected':'' ?>>Assigned</option>
+                                <option value="InProgress"  <?= $b['status']=='InProgress'?'selected':'' ?>>InProgress</option>
+                                <option value="Completed"   <?= $b['status']=='Completed'?'selected':'' ?>>Completed</option>
+                            </select>
+
+                            <button class="btn btn-success btn-sm w-100">Save</button>
                         </form>
                     </td>
                 </tr>
-                <?php endforeach;
-?>
+                <?php endforeach; ?>
             </tbody>
-            <script>
-setTimeout(() => {
-    let msg = document.querySelector('.flash-message');
-    if (msg) {
-        msg.style.opacity = "0";
-        setTimeout(() => msg.remove(), 500);
-    }
-}, 5000);
-</script>
+        </table>
 
-
+        <a href="home.php" class="btn btn-secondary mt-3">Back</a>
     </div>
+
+    <script>
+    setTimeout(() => {
+        const msg = document.querySelector('.flash-message');
+        if (msg) {
+            msg.style.transition = "opacity 0.5s";
+            msg.style.opacity = "0";
+            setTimeout(() => msg.remove(), 500);
+        }
+    }, 3000);
+    </script>
 </body>
 
 </html>
