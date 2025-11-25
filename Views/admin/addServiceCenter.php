@@ -1,25 +1,46 @@
 <?php
+
 session_start();
 require_once '../../controllers/AdminController.php';
 require_once '../../helpers/flash.php';
 
-if (!isset($_SESSION['admin_logged_in'])) {
-    header('Location: login.php');
-    exit();
-}
-
 $controller = new AdminController();
 
+$daysOfWeek = [
+    1 => 'Monday',
+    2 => 'Tuesday',
+    3 => 'Wednesday',
+    4 => 'Thursday',
+    5 => 'Friday',
+    6 => 'Saturday',
+    7 => 'Sunday',
+];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if ($controller->addServiceCenter($_POST)) {
+
+    // Center fields
+    $centerData = [
+        'name'        => $_POST['name'],
+        'email'       => $_POST['email'] ?? null,
+        'phone_no'    => $_POST['phone_no'] ?? null,
+        'description' => $_POST['description'] ?? null,
+        'address'     => $_POST['address'],
+        'base_price'  => $_POST['base_price'] ?? 0.00,
+        'image_url'   => $_POST['image_url'] ?? null,
+    ];
+
+    // timings
+    $timings = $_POST['timings'] ?? [];
+
+    if ($controller->addServiceCenter($centerData, $timings)) {
         setFlash('success', 'Service Center added successfully!');
-        header('Location: home.php');
-        exit();
     } else {
-        setFlash('danger', 'Error adding Service Center!');
-        header('Location: addServiceCenter.php');
-        exit();
+        setFlash('danger', 'Error adding Service Center.');
     }
+
+    // PRG
+    header('Location: addServiceCenter.php');
+    exit();
 }
 ?>
 <!DOCTYPE html>
@@ -32,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body class="bg-light">
-    <div class="container mt-5">
+    <div class="container mt-5" style="max-width: 900px;">
         <h3 class="text-success mb-4">Add Service Center</h3>
 
         <?php showFlash(); ?>
@@ -43,21 +64,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input name="phone_no" class="form-control mb-2" placeholder="Phone">
             <textarea name="description" class="form-control mb-2" placeholder="Description"></textarea>
             <textarea name="address" class="form-control mb-2" placeholder="Address *" required></textarea>
-            <input name="timings_note" class="form-control mb-2" placeholder="Timings (e.g., Mon–Fri 9AM–6PM)">
-            <input type="number" step="0.01" name="base_price" class="form-control mb-2" placeholder="Base Price (e.g., 49.99)">
-            <input name="image_url" class="form-control mb-3" placeholder="/path/to/image.png">
+            <input type="number" step="0.01" name="base_price" class="form-control mb-2"
+            placeholder="Base Price (e.g., 49.99)">
+            <input name="image_url" class="form-control mb-3" placeholder="Image URL (optional)">
+
+            <h5 class="mt-4 mb-2 text-success">Weekly Timings</h5>
+            <p class="text-muted" style="font-size: 0.9rem;">
+                Tick <strong>Open</strong> and choose start/end time for days you work. Leave unchecked to mark as
+                <strong>Closed</strong>.
+            </p>
+
+            <div class="table-responsive mb-3">
+                <table class="table table-bordered align-middle">
+                    <thead class="table-success">
+                        <tr>
+                            <th style="width: 20%;">Day</th>
+                            <th style="width: 10%;">Open?</th>
+                            <th style="width: 35%;">Start Time</th>
+                            <th style="width: 35%;">End Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($daysOfWeek as $day => $label): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($label) ?></td>
+                            <td class="text-center">
+                                <input type="checkbox"
+                                class="form-check-input day-open"
+                                name="timings[<?= $day ?>][open]"
+                                value="1"
+                                <?= ($day <= 5) ? 'checked' : '' ?>>
+                            </td>
+                            <td>
+<input type="time" name="timings[<?= $day ?>][start]"class="form-control"value="<?= ($day <= 5) ? '09:00' : '' ?>">
+                            </td>
+                            <td>
+        <input type="time"
+            name="timings[<?= $day ?>][end]"
+            class="form-control"
+            value="<?= ($day <= 5) ? '17:00' : '' ?>">
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
 
             <button class="btn btn-success">Add Center</button>
             <a href="home.php" class="btn btn-secondary">Back</a>
         </form>
-
-        <p class="text-muted mt-3 mb-0" style="font-size:.9rem;">
-            <strong>Note:</strong> <code>created_at</code> is set automatically by the database.
-        </p>
     </div>
 
     <script>
-    setTimeout(() => {
+    document.querySelectorAll('.day-open').forEach(cb => {
+        const row = cb.closest('tr');
+        const times = row.querySelectorAll('input[type="time"]');
+
+        function sync() {
+            const enabled = cb.checked;
+            times.forEach(t => t.disabled = !enabled);
+        }
+
+        cb.addEventListener('change', sync);
+        sync();
+    });
+<script>
+setTimeout(() => {
         const msg = document.querySelector('.flash-message');
         if (msg) {
             msg.style.transition = "opacity 0.5s";
@@ -65,7 +137,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             setTimeout(() => msg.remove(), 500);
         }
     }, 3000);
-    </script>
+</script>
+
 </body>
 
 </html>

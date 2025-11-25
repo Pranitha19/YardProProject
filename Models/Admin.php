@@ -13,7 +13,7 @@ class Admin
         return $stmt->fetch();
     }
 
-    // Login: return admin row on success, false on failure
+    // Login: returns admin row on success, false on failure
     public function login($email, $password)
     {
         $admin = $this->getByEmail($email);
@@ -22,7 +22,7 @@ class Admin
         }
 
         if (password_verify($password, $admin['password_hash'])) {
-            return $admin; // return full row so we can store name/email
+            return $admin; // returns full row so we can store name/email
         }
 
         return false;

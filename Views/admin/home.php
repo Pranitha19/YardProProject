@@ -53,8 +53,8 @@ $centers    = $controller->getAllCenters();
                 || strpos(strtolower($c['address'] ?? ''), $q) !== false;
         });
 
-        echo "<div class='container mt-3'><div class='alert alert-info text-center'>Showing results for: <strong>" .
-             htmlspecialchars($_GET['q']) . "</strong></div></div>";
+    echo "<div class='container mt-3'><div class='alert alert-info text-center'>Showing results for: <strong>" .
+        htmlspecialchars($_GET['q']) . "</strong></div></div>";
     }
     ?>
 
@@ -75,9 +75,9 @@ $centers    = $controller->getAllCenters();
                                 <?= htmlspecialchars($center['description'] ?? 'No description available.') ?>
                             </p>
                             <p class="timings mb-1">
-                                <strong>Timings:</strong>
-                                <?= htmlspecialchars($center['timings_note'] ?? 'N/A') ?>
-                            </p>
+    <strong>Timings:</strong> Configured in weekly schedule
+</p>
+
                             <p class="price mb-1">$<?= htmlspecialchars($center['base_price']) ?></p>
                             <p class="text-muted mb-0">
                                 <small><strong>Address:</strong> <?= htmlspecialchars($center['address']) ?></small>
