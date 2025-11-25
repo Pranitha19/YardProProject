@@ -3,21 +3,16 @@ require_once( __DIR__ . '/../config/pdo.php' );
 
 class Employee {
 
-    /* ----------------------------------------
-    EXISTING METHOD ( DO NOT TOUCH )
-    ---------------------------------------- */
-
-    // Insert new employee
+    // Inserts new employee
 
     public function register( $data ) {
         global $pdo;
 
-        // Keep your existing password hashing logic
         $hashedPassword = password_hash( $data[ 'password' ], PASSWORD_DEFAULT );
 
         $stmt = $pdo->prepare(
             "INSERT INTO employees (name, email, password_hash, phone_no, address)
-             VALUES (?, ?, ?, ?, ?)"
+        VALUES (?, ?, ?, ?, ?)"
         );
 
         return $stmt->execute( [
@@ -28,10 +23,6 @@ class Employee {
             $data[ 'address' ] ?? null
         ] );
     }
-
-    /* ----------------------------------------
-    NEW METHODS ( SAFE ADDITIONS )
-    ---------------------------------------- */
 
     // Fetch employee by ID
 
@@ -56,7 +47,7 @@ class Employee {
     public function updateEmployeeProfile( $data ) {
         global $pdo;
         $stmt = $pdo->prepare(
-            "UPDATE employees 
+            "UPDATE employees
 SET name = ?, phone_no = ?, address = ?
 WHERE employee_id = ?"
         );
@@ -90,4 +81,3 @@ WHERE employee_id = ?"
     }
 
 }
-?>

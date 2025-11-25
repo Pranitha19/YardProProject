@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email    = trim($_POST['email']);
     $password = trim($_POST['password']);
 
-    // 1) Try ADMIN login (database)
+    // Admin login
     $adminRow = $controller->login($email, $password);
 
     if ($adminRow) {
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // 2) Try EMPLOYEE login
+    // Employee login
     $stmt = $pdo->prepare('SELECT * FROM employees WHERE email = ?');
     $stmt->execute([$email]);
     $employee = $stmt->fetch();
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // 3) If both fail
+    //If both fail
     setFlash('danger', 'Invalid email or password!');
 }
 ?>

@@ -1,9 +1,7 @@
 <?php
-/**
-* ServiceCenter Model ( FINAL )
-* CRUD for 'service_centers' table
-*/
-require_once( __DIR__ . '/../config/pdo.php' );
+//CRUD for 'service_centers' table
+
+require_once __DIR__ . '/../config/pdo.php' ;
 
 class ServiceCenter {
 
@@ -31,7 +29,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 
     public function getAllCenters() {
         global $pdo;
-        // include created_at & image_url for downstream use if needed
+        
         $stmt = $pdo->query(
         "SELECT center_id, name, email, phone_no, description, address,
                 timings_note, base_price, image_url, created_at
@@ -69,4 +67,3 @@ timings_note = ?, base_price = ?, image_url = ? WHERE center_id = ?"
         return $stmt->execute( [ $center_id ] );
     }
 }
-?>
