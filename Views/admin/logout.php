@@ -4,8 +4,6 @@ require_once '../../helpers/flash.php';
 
 // Stores flash
 setFlash('success', 'Logged out successfully.');
-
-// Removes login info ONLY
 unset($_SESSION['admin_logged_in']);
 unset($_SESSION['admin_email']);
 unset($_SESSION['admin_name']);

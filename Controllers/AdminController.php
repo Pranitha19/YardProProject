@@ -22,7 +22,6 @@ class AdminController {
         return $this->adminModel->login($email, $password);
     }
 
-    // ⬇️ UPDATED: pass timings too
     public function addServiceCenter(array $data, array $timings) {
         return $this->serviceCenterModel->addServiceCenter($data, $timings);
     }
@@ -30,8 +29,6 @@ class AdminController {
     public function getAllCenters() {
         return $this->serviceCenterModel->getAllCenters();
     }
-
-    // ⬇️ UPDATED: pass timings too
     public function updateServiceCenter(array $data, array $timings) {
         return $this->serviceCenterModel->updateServiceCenter($data, $timings);
     }
@@ -49,13 +46,10 @@ class AdminController {
         return $this->serviceCenterModel->getCenterTimings((int)$center_id);
     }
 
-// Admin — Assign Employee
-
     public function assignEmployee( $booking_id, $employee_id ) {
         return $this->bookingModel->adminAssignEmployee( $booking_id, $employee_id );
     }
 
-    // Admin — Update Booking Status
 
     public function updateBookingStatus( $booking_id, $status ) {
         return $this->bookingModel->adminUpdateStatus( $booking_id, $status );
@@ -64,5 +58,9 @@ class AdminController {
     public function getAllEmployees() {
         return $this->employeeModel->getAllEmployees();
     }
+    public function getTimings($centerId){
+    return $this->serviceCenterModel->getCenterTimings($centerId);
+}
+
 
 }

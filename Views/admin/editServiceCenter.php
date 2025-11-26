@@ -40,7 +40,6 @@ if (isset($_POST['update'])) {
     }
 }
 
-// AJAX: return JSON with center + timings
 if (isset($_GET['center_id']) && !empty($_GET['center_id'])) {
     $center_id = (int)$_GET['center_id'];
     $center    = null;
@@ -113,26 +112,16 @@ if (isset($_GET['center_id']) && !empty($_GET['center_id'])) {
                     <tbody>
                         <?php foreach ($daysOfWeek as $day => $label): ?>
                         <tr>
-                            <td><?= htmlspecialchars($label) ?></td>
-                            <td class="text-center">
-                                <input type="checkbox"
-                                       class="form-check-input day-open"
-                                       id="day<?= $day ?>_open"
-                                       name="timings[<?= $day ?>][open]"
-                                       value="1">
-                            </td>
-                            <td>
-                                <input type="time"
-                                       id="day<?= $day ?>_start"
-                                       name="timings[<?= $day ?>][start]"
-                                       class="form-control">
-                            </td>
-                            <td>
-                                <input type="time"
-                                       id="day<?= $day ?>_end"
-                                       name="timings[<?= $day ?>][end]"
-                                       class="form-control">
-                            </td>
+                <td><?= htmlspecialchars($label) ?></td>
+                <td class="text-center">
+    <input type="checkbox"class="form-check-input day-open"id="day<?= $day ?>_open"name="timings[<?= $day ?>][open]"value="1">
+                </td>
+        <td>
+    <input type="time"id="day<?= $day ?>_start"name="timings[<?= $day ?>][start]"class="form-control">
+        </td>
+<td>
+<input type="time"id="day<?= $day ?>_end"name="timings[<?= $day ?>][end]"class="form-control">
+</td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>

@@ -11,6 +11,35 @@ require_once '../../helpers/flash.php';
 $controller = new AdminController();
 $centers    = $controller->getAllCenters();
 ?>
+<?php
+function formatTimings(array $timings): string {
+    $days = [
+        1 => "Mon",
+        2 => "Tue",
+        3 => "Wed",
+        4 => "Thu",
+        5 => "Fri",
+        6 => "Sat",
+        7 => "Sun"
+    ];
+
+    $output = "<ul class='list-unstyled mb-0'>";
+
+    foreach ($days as $dayNum => $dayName) {
+        if (!isset($timings[$dayNum]) || !$timings[$dayNum]['start']) {
+            $output .= "<li><strong>$dayName:</strong> Closed</li>";
+        } else {
+            $start = substr($timings[$dayNum]['start'], 0, 5);
+            $end   = substr($timings[$dayNum]['end'], 0, 5);
+            $output .= "<li><strong>$dayName:</strong> $start – $end</li>";
+        }
+    }
+
+    $output .= "</ul>";
+    return $output;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -65,6 +94,10 @@ $centers    = $controller->getAllCenters();
         <?php if (count($centers) > 0): ?>
             <div class="row g-4">
                 <?php foreach ($centers as $center): ?>
+                    <?php
+$timings = $controller->getTimings($center['center_id']);
+?>
+
                 <div class="col-md-4 col-sm-6">
                     <div class="card service-card shadow-sm">
                         <img src="<?= !empty($center['image_url']) ? htmlspecialchars($center['image_url']) : '../../assets/images/default.jpg' ?>"
@@ -74,9 +107,11 @@ $centers    = $controller->getAllCenters();
                             <p class="card-text mb-1">
                                 <?= htmlspecialchars($center['description'] ?? 'No description available.') ?>
                             </p>
-                            <p class="timings mb-1">
-    <strong>Timings:</strong> Configured in weekly schedule
-</p>
+                            <div class="timings mb-2">
+    <strong>Timings:</strong>
+    <?= formatTimings($timings) ?>
+</div>
+
 
                             <p class="price mb-1">$<?= htmlspecialchars($center['base_price']) ?></p>
                             <p class="text-muted mb-0">

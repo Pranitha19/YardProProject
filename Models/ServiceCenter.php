@@ -3,7 +3,7 @@ require_once __DIR__ . '/../config/pdo.php';
 
 class ServiceCenter
 {
-    // Creats service center 
+    // Creates service center
     public function addServiceCenter(array $data, array $timings): int
     {
         global $pdo;
@@ -47,10 +47,10 @@ class ServiceCenter
             echo "</pre>";
             exit;
         }
-    } 
+    }
 
 
-    // Update center + timings
+    // Update center & timings
     public function updateServiceCenter(array $data, array $timings): bool
     {
         global $pdo;
@@ -146,7 +146,6 @@ class ServiceCenter
     {
         global $pdo;
 
-        // Remove old timings
         $pdo->prepare("DELETE FROM timings WHERE center_id = ?")->execute([$centerId]);
 
         $ins = $pdo->prepare(
