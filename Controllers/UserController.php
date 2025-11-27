@@ -1,8 +1,8 @@
 <?php
-require_once __DIR__ . '/../config/pdo.php';
 require_once __DIR__ . '/../Models/User.php';
 
 class UserController {
+
     private $userModel;
 
     public function __construct() {
@@ -14,126 +14,74 @@ class UserController {
     }
 
     public function updateProfile($user_id, $data) {
-        $first = trim($data['first_name']);
-        $last  = trim($data['last_name']);
-        $phone = trim($data['phone_no']);
-        $addr  = trim($data['address']);
 
-        if ($first === '' || $last === '') {
-            header("Location: ../../Views/user/editProfile.php?err=First and last name required");
-            exit;
-        }
+    // Build the payload that matches the model method
+    $payload = [
+        'user_id'    => $user_id,
+        'first_name' => trim($data['first_name']),
+        'last_name'  => trim($data['last_name']),
+        'phone_no'   => trim($data['phone_no']),
+        'address'    => trim($data['address'])
+    ];
 
-        $this->userModel->update($user_id, $first, $last, $phone, $addr);
-        header("Location: ../../Views/user/editProfile.php?msg=Profile updated successfully");
-        exit;
+    // Call model function (this exists)
+    return $this->userModel->updateProfile($payload);
+}
+
+
+    public function getServiceCenters($search = "") {
+        return $this->userModel->getServiceCenters($search);
     }
 
-    public function getServiceCenters($pdo, $search = '') {
-        if ($search) {
-            $stmt = $pdo->prepare("SELECT * FROM service_centers WHERE name LIKE :search ORDER BY name ASC");
-            $stmt->execute([':search' => "%$search%"]);
-        } else {
-            $stmt = $pdo->query("SELECT * FROM service_centers ORDER BY name ASC");
-        }
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    public function getServiceCenter($center_id) {
+        return $this->userModel->getServiceCenterById($center_id);
     }
 
     public function getUserBookings($user_id) {
-    return $this->userModel->getBookingsByUser($user_id);
+        return $this->userModel->getBookingsByUser($user_id);
+    }
+
+    public function getBookingById($booking_id) {
+        return $this->userModel->getBookingById($booking_id);
+    }
+
+    public function updateBooking($booking_id, $date, $time) {
+        return $this->userModel->updateBookingDateTime($booking_id, $date, $time);
+    }
+
+   public function cancelBooking($booking_id) {
+    return $this->userModel->cancelBooking($booking_id);
 }
 
-
-    public function cancelBooking($booking_id) {
-    global $pdo;
-
-    // Fetch booking first
-    $stmt = $pdo->prepare("SELECT booking_date, booking_time, status FROM bookings WHERE booking_id = :bid");
-    $stmt->execute([':bid' => $booking_id]);
-    $booking = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$booking) {
-        header("Location: ../../Views/user/viewBookings.php?err=Booking not found");
-        exit;
+    public function isSlotTaken($center_id, $date, $time, $exclude = null) {
+        return $this->userModel->isSlotTaken($center_id, $date, $time, $exclude);
     }
 
-    // Calculate time difference
-    $bookingDateTime = strtotime($booking['booking_date'] . ' ' . $booking['booking_time']);
-    $now = time();
-    $hoursDiff = ($bookingDateTime - $now) / 3600;
+    public function processBooking($user_id, $center_id, $data) {
 
-    if ($booking['status'] !== 'Requested') {
-        header("Location: ../../Views/user/viewBookings.php?err=Cannot cancel — booking already processed");
-        exit;
-    }
-
-    if ($hoursDiff <= 24) {
-        header("Location: ../../Views/user/viewBookings.php?toast=late_cancel");
-        exit;
-    }
-
-    // Update status to Cancelled
-    $update = $pdo->prepare("UPDATE bookings SET status = 'Cancelled' WHERE booking_id = :bid");
-    $update->execute([':bid' => $booking_id]);
-
-    header("Location: /YardProProject/Views/user/viewBookings.php?toast=cancel_success");
-
-    exit;
-    
-}
-public function editBooking($booking_id) {
-    require_once __DIR__ . '/../config/pdo.php';
-    $model = new User();
-
-    $booking = $model->getBookingById($booking_id);
-    if (!$booking) {
-        header("Location: /YardProProject/Views/user/viewBookings.php?err=Booking not found");
-        exit;
-    }
-
-    // Prevent editing within 24 hours
-    $bookingDateTime = strtotime($booking['booking_date'] . ' ' . $booking['booking_time']);
-    if (($bookingDateTime - time()) / 3600 < 24) {
-        header("Location: /YardProProject/Views/user/viewBookings.php?err=Cannot edit within 24 hours of booking");
-        exit;
-    }
-
-    // Handle form submission
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $new_date = $_POST['booking_date'];
-        $new_time = $_POST['booking_time'];
-
-        // Check slot conflict
-        if ($model->isSlotTaken($booking['center_id'], $new_date, $new_time, $booking_id)) {
-            $error = "This time slot is already booked.";
-            include __DIR__ . '/../Views/user/editBooking.php';
-            return;
+        if ($this->userModel->isSlotTaken($center_id, $data['booking_date'], $data['booking_time'])) {
+            return "Slot Full";
         }
 
-        $model->updateBookingDateTime($booking_id, $new_date, $new_time);
-        header("Location: /YardProProject/Views/user/viewBookings.php?msg=Booking updated successfully");
-        exit;
-    }
+        $booking_id = $this->userModel->createBooking([
+            'user_id' => $user_id,
+            'center_id' => $center_id,
+            'service_name' => $data['service_name'],
+            'price' => $data['price'],
+            'booking_date' => $data['booking_date'],
+            'booking_time' => $data['booking_time']
+        ]);
+        $this->userModel->createPayment([
+            'booking_id' => $booking_id,
+            'amount' => $data['price'],
+            'card_holder' => $data['card_holder'],
+            'card_number' => $data['card_number'],
+            'card_type' => $data['card_type'],
+            'cvv' => $data['cvv'],
+            'expiry_date' => $data['expiry_date']
+        ]);
 
-    // ✅ If not POST → load the edit form
-    include __DIR__ . '/../Views/user/editBooking.php';
-}
-
-
-}
-
-
-if (isset($_GET['action'])) {
-    require_once __DIR__ . '/../models/User.php';
-    $controller = new UserController();
-
-    if ($_GET['action'] === 'editBooking' && isset($_GET['booking_id'])) {
-        $controller->editBooking($_GET['booking_id']);
-    }
-
-    if ($_GET['action'] === 'cancelBooking' && isset($_GET['booking_id'])) {
-        $controller->cancelBooking($_GET['booking_id']);
+        return "success";
     }
 }
-
-
+?>

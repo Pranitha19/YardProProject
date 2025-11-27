@@ -8,8 +8,10 @@ if (!isset($_GET['center_id']) || !isset($_GET['date'])) {
 
 $center_id = $_GET['center_id'];
 $selected_date = $_GET['date'];
-$weekday = date('N', strtotime($selected_date)); // 1 = Monday ... 7 = Sunday
 
+$weekday = date('N', strtotime($selected_date)); // 1=Mon ... 7=Sun
+
+// Fetch timings for selected day
 $timeStmt = $pdo->prepare("
   SELECT start_time, end_time 
   FROM timings 
@@ -21,13 +23,20 @@ $timing = $timeStmt->fetch();
 $slots = [];
 
 if ($timing) {
-  $start = strtotime($timing['start_time']);
-  $end   = strtotime($timing['end_time']);
+  
+  $start = strtotime($timing['start_time']);   // e.g., 10:00:00
+  $end   = strtotime($timing['end_time']);     // e.g., 18:00:00
 
-  while ($start + 7200 <= $end) { // 2-hour slots (7200 sec)
+  // Generate 2-hour slots
+  while ($start + 7200 <= $end) {
+
     $slot_start = date("H:i:s", $start);
     $slot_end   = date("H:i:s", $start + 7200);
 
+    // Format for display (friendly 12-hr format)
+    $slot_label = date("h:i A", $start) . " – " . date("h:i A", $start + 7200);
+
+    // Check if already booked
     $check = $pdo->prepare("
       SELECT COUNT(*) FROM bookings
       WHERE center_id = :cid AND booking_date = :bdate AND booking_time = :btime
@@ -35,13 +44,16 @@ if ($timing) {
     $check->execute([':cid' => $center_id, ':bdate' => $selected_date, ':btime' => $slot_start]);
     $count = $check->fetchColumn();
 
-    if ($count >= 2) {
-      $slots[] = ['slot' => "$slot_start – $slot_end (Full)", 'available' => false];
-    } else {
-      $slots[] = ['slot' => "$slot_start – $slot_end", 'available' => true, 'value' => $slot_start];
-    }
+    // Capacity = 2 bookings per slot
+    $available = ($count < 2);
 
-    $start += 7200; // move by 2 hours
+    $slots[] = [
+      'slot'      => $slot_label,
+      'value'     => $slot_start,
+      'available' => $available
+    ];
+
+    $start += 7200; // +2 hours
   }
 }
 

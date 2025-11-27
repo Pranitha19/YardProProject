@@ -7,9 +7,13 @@ $controller = new UserController();
 $user_id = $_SESSION['user_id'];
 $user = $controller->getUserDetails($user_id);
 
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $controller->updateProfile($user_id, $_POST);
+    header("Location: editProfile.php?msg=Profile updated successfully");
+    exit;
 }
+
 ?>
 
 <!DOCTYPE html>
