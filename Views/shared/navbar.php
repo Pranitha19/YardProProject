@@ -1,4 +1,8 @@
 <?php
+require_once __DIR__ . '/../Models/VisitTracker.php';
+$tracker = new VisitTracker();
+$tracker->track();
+
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <link rel="stylesheet" href="/YardProProject/static/css/navbar.css">
