@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 26, 2025 at 12:19 AM
+-- Generation Time: Oct 27, 2025 at 01:07 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -88,7 +88,8 @@ CREATE TABLE `service_centers` (
   `timings_note` varchar(255) DEFAULT NULL,
   `address` varchar(255) NOT NULL,
   `base_price` decimal(10,2) DEFAULT 0.00,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `image_url` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -122,6 +123,14 @@ CREATE TABLE `users` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `email`, `password_hash`, `phone_no`, `address`, `created_at`) VALUES
+(1, 'anuhya', 'M', 'anum@gmail.com', '$2y$10$HdgUwrUoTsviEUshj3qIhuAp76UREtkCAs1gH4N//Xsl584tQ78E6', '9199999999', '1234 abc street', '2025-10-26 02:16:36'),
+(2, 'kiran', 'D', 'kiran@gmail.com', '$2y$10$p7KgLI9/EcV0AjrG6MJTKeTG0ygUE5P4SLJthxVx1yhIMwBmbYQu6', '9188888888', '1234 FosterSt', '2025-10-26 05:51:26');
+
 -- --------------------------------------------------------
 
 --
@@ -135,6 +144,14 @@ CREATE TABLE `user_visits` (
   `visit_count` int(10) UNSIGNED NOT NULL DEFAULT 1,
   `last_visit_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_visits`
+--
+
+INSERT INTO `user_visits` (`visit_id`, `user_id`, `session_id`, `visit_count`, `last_visit_at`) VALUES
+(1, 1, 'pu5j1jruicr4mafi847pgud5cg', 4, '2025-10-26 23:41:13'),
+(2, 2, 'pu5j1jruicr4mafi847pgud5cg', 1, '2025-10-26 05:51:36');
 
 --
 -- Indexes for dumped tables
@@ -216,7 +233,7 @@ ALTER TABLE `payments`
 -- AUTO_INCREMENT for table `service_centers`
 --
 ALTER TABLE `service_centers`
-  MODIFY `center_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `center_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `timings`
@@ -228,13 +245,13 @@ ALTER TABLE `timings`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user_visits`
 --
 ALTER TABLE `user_visits`
-  MODIFY `visit_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `visit_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
