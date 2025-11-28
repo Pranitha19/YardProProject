@@ -1,45 +1,81 @@
+<?php
+session_start();
+require_once __DIR__ . '/../../Controllers/UserController.php';
+
+$controller = new UserController();
+$error = "";
+$success = "";
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    // Hash password before passing to model
+    $hashed = password_hash($_POST['password'], PASSWORD_BCRYPT);
+
+    $payload = [
+        'first_name'    => trim($_POST['first_name']),
+        'last_name'     => trim($_POST['last_name']),
+        'email'         => trim($_POST['email']),
+        'password_hash' => $hashed,
+        'phone_no'      => trim($_POST['phone_no']),
+        'address'       => trim($_POST['address'])
+    ];
+
+    $registered = $controller->register($payload);
+
+    if ($registered) {
+        $success = "Registration successful! You can now login.";
+    } else {
+        $error = "Registration failed. Email may already exist.";
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>YardPro Registration</title>
-  <!-- Unified style file (auth.css content moved into style.css if merged) -->
-  <link rel="stylesheet" href="../../Static/css/auth.css">
+    <meta charset="UTF-8">
+    <title>User Registration</title>
+    <link rel="stylesheet" href="/YardProProject/Static/css/auth.css">
 </head>
+
 <body>
 
-  <div class="auth-card">
+    <div class="auth-card">
     <h2>Create Your Account</h2>
 
-    <!-- Display error message if redirected with ?err -->
-    <?php if (!empty($_GET['err'])): ?>
-      <p class="error"><?= htmlspecialchars($_GET['err']) ?></p>
-    <?php endif; ?>
-    <form method="post" action="../../Controllers/AuthController.php?action=register">
+        <?php if (!empty($error)) : ?>
+            <p class="error"><?= $error ?></p>
+        <?php endif; ?>
 
-      <label for="first_name"><b>First Name</b></label>
-      <input type="text" name="first_name" placeholder="First name" required>
+        <?php if (!empty($success)) : ?>
+            <p class="success"><?= $success ?></p>
+        <?php endif; ?>
 
-      <label for="last_name"><b>Last Name</b></label>
-      <input type="text" name="last_name" placeholder="Last name" required>
+        <form method="POST">
 
-      <label for="email"><b>Email</b></label>
-      <input type="email" name="email" placeholder="Email address" required>
+            <label>First Name</label>
+            <input type="text" name="first_name" placeholder="Enter your First Name" required>
 
-      <label for="password"><b>Password</b></label>
-      <input type="password" name="password" placeholder="Password (min 6 characters)" minlength="6" required>
+            <label>Last Name</label>
+            <input type="text" name="last_name" placeholder="Enter your Last Name" required>
 
-      <label for="phone_no"><b>Phone Number</b></label>
-      <input type="text" name="phone_no" placeholder="Phone number">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Enter your Email" required>
 
-      <label for="address"><b>Address</b></label>
-      <input type="text" name="address" placeholder="Address">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter your Password" required>
 
-      <button type="submit" class="btn-primary">Register</button>
-    </form>
+            <label>Phone Number</label>
+            <input type="text" name="phone_no" placeholder="Enter your Phone Number" required>
 
-    <a href="login.php" class="link">Already have an account? Log in</a>
-  </div>
+            <label for="address"><b>Address</b></label>
+      <input type="text" name="address" placeholder="Address" required>
+            <button type="submit" class="btn-primary">Register</button>
+        </form>
+        <a href="login.php" class="link">Already have an account? Login</a>
+    </div>
 
 </body>
+
 </html>

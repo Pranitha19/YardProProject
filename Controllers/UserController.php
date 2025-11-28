@@ -4,9 +4,34 @@ require_once __DIR__ . '/../Models/User.php';
 class UserController {
 
     private $userModel;
-
     public function __construct() {
         $this->userModel = new User();
+    }
+
+    public function login($email, $password) {
+        $user = $this->userModel->authenticate($email, $password);
+
+    if ($user) {
+        return $user;   // successful login
+    }
+
+    return false;       // invalid login
+}
+    
+
+    public function register($data) {
+        return $this->userModel->createUser($data);
+
+    }
+
+    public function getUser($id) {
+        return $this->userModel->getUserById($id);
+    }
+
+    public function logout() {
+        session_destroy();
+        header("Location: login.php");
+        exit;
     }
 
     public function getUserDetails($user_id) {

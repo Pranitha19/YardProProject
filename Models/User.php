@@ -33,6 +33,15 @@ class User {
 
         return $pdo->lastInsertId();
     }
+    public function authenticate($email, $password) {
+    $user = $this->getUserByEmail($email);
+
+    if ($user && password_verify($password, $user['password_hash'])) {
+        return $user;   // successful login
+    }
+
+    return false;        // invalid credentials
+   }
 
     public function getUserByEmail($email) {
         global $pdo;

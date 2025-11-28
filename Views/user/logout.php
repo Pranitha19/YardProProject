@@ -1,6 +1,9 @@
+
 <?php
 session_start();
-$_SESSION = [];
-session_destroy();
-header('Location: /YardProProject/views/user/login.php?msg=Logged+out');
-exit;
+require_once __DIR__ . '/../../Controllers/UserController.php';
+
+$controller = new UserController();
+$controller->logout();
+?>
+
