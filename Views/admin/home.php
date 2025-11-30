@@ -51,7 +51,7 @@ function formatTimings(array $timings): string {
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg shadow-sm">
+    <nav class="navbar navbar-expand-lg shadow-sm"style="background:#2e7d32;">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold text-white" href="home.php">YardPro Admin</a>
 
@@ -62,11 +62,11 @@ function formatTimings(array $timings): string {
             </form>
 
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="addServiceCenter.php">Add</a></li>
-                <li class="nav-item"><a class="nav-link" href="editServiceCenter.php">Edit</a></li>
-                <li class="nav-item"><a class="nav-link" href="deleteServiceCenter.php">Delete</a></li>
-                <li class="nav-item"><a class="nav-link" href="registerEmployee.php">Register</a></li>
-                <li class="nav-item"><a class="nav-link" href="viewAllBookings.php">Bookings</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="addServiceCenter.php">Add</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="editServiceCenter.php">Edit</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="deleteServiceCenter.php">Delete</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="registerEmployee.php">Register</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="viewAllBookings.php">Bookings</a></li>
                 <li class="nav-item"><a class="nav-link text-warning" href="logout.php">Logout</a></li>
             </ul>
         </div>
