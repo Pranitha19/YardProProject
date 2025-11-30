@@ -28,7 +28,7 @@ class Booking {
         return $stmt->execute( [ $status, $booking_id, $employee_id ] );
     }
 
-    //ADMIN: ASSIGN EMPLOYEE TO ANY BOOKING
+    //Admin assign employee to booking
 
     public function adminAssignEmployee( $booking_id, $employee_id ) {
         global $pdo;
@@ -39,7 +39,7 @@ class Booking {
         return $stmt->execute( [ $employee_id, $booking_id ] );
     }
 
-    //ADMIN: UPDATE STATUS FOR ANY BOOKING
+    //Admin update status for any booking
 
     public function adminUpdateStatus( $booking_id, $status ) {
         global $pdo;
@@ -50,4 +50,3 @@ class Booking {
         return $stmt->execute( [ $status, $booking_id ] );
     }
 }
-?>

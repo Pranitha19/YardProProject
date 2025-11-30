@@ -76,11 +76,8 @@ class User {
 
         return true;
     }
+      // service centers
 
-
-    /* ============================
-       SERVICE CENTERS
-    ============================ */
 
     public function getServiceCenters($search = "") {
         global $pdo;
@@ -105,11 +102,7 @@ class User {
         $stmt->execute([':cid' => $center_id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-
-
-    /* ============================
-       BOOKINGS
-    ============================ */
+     //bookings
 
     public function getBookingsByUser($user_id) {
         global $pdo;
@@ -142,9 +135,9 @@ class User {
 
         $stmt = $pdo->prepare("
             INSERT INTO bookings
-              (user_id, center_id, service_name, price, booking_date, booking_time, status)
+            (user_id, center_id, service_name, price, booking_date, booking_time, status)
             VALUES
-              (:uid, :cid, :sname, :price, :bdate, :btime, 'Requested')
+            (:uid, :cid, :sname, :price, :bdate, :btime, 'Requested')
         ");
 
         $stmt->execute([
@@ -175,17 +168,14 @@ class User {
         ]);
     }
 
-
-    /* ============================
-       CANCEL BOOKING
-    ============================ */
+    //cancel booking
 
 public function cancelBooking($booking_id) {
     global $pdo;
 
     // Fetch booking
     $stmt = $pdo->prepare("SELECT booking_date, booking_time, status 
-                           FROM bookings WHERE booking_id = :id");
+                    FROM bookings WHERE booking_id = :id");
     $stmt->execute([':id' => $booking_id]);
     $booking = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -207,10 +197,7 @@ public function cancelBooking($booking_id) {
     return "success";
 }
 
-
-    /* ============================
-       SLOT CHECK
-    ============================ */
+       //slot check
 
     public function isSlotTaken($center_id, $date, $time, $exclude_id = null) {
         global $pdo;
@@ -218,8 +205,8 @@ public function cancelBooking($booking_id) {
         $query = "
             SELECT COUNT(*) FROM bookings 
             WHERE center_id = :cid 
-              AND booking_date = :bdate
-              AND booking_time = :btime
+            AND booking_date = :bdate
+            AND booking_time = :btime
         ";
 
         if ($exclude_id) {
@@ -245,18 +232,15 @@ public function cancelBooking($booking_id) {
     }
 
 
-    /* ============================
-       PAYMENT
-    ============================ */
+    //payment
 
     public function createPayment($data) {
         global $pdo;
 
         $stmt = $pdo->prepare("
-            INSERT INTO payments 
+            INSERT INTO payments
                 (booking_id, amount, card_holder, card_number, card_type, cvv, expiry_date)
-            VALUES 
-                (:bid, :amt, :holder, :cnum, :ctype, :cvv, :exp)
+            VALUES(:bid, :amt, :holder, :cnum, :ctype, :cvv, :exp)
         ");
 
         return $stmt->execute([
