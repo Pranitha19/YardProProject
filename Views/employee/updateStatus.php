@@ -1,10 +1,8 @@
 <?php
-session_start();
-require_once '../../controllers/EmployeeController.php';
-require_once '../../helpers/flash.php';
+// Controllers and helpers already loaded by index.php
 
-if (!isset($_SESSION['employee_logged_in'])) {
-    header('Location: ../admin/login.php');
+if (!isset($_SESSION['employee_id'])) {
+    header('Location: /YardProProject/?route=employee/login');
     exit();
 }
 
@@ -18,6 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     );
 
     setFlash('success', 'Booking status updated successfully!');
-    header('Location: home.php');
+    header('Location: /YardProProject/?route=employee/home');
     exit();
 }

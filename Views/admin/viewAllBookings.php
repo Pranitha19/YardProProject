@@ -1,14 +1,10 @@
 <?php
-session_start();
-if (!isset($_SESSION['admin_logged_in'])) {
-    header('Location: login.php');
+if (!isset($_SESSION['admin_id'])) {
+    header('Location: /YardProProject/?route=admin/login');
     exit();
 }
 
-require_once '../../controllers/AdminController.php';
-require_once '../../helpers/flash.php';
-require_once '../../config/pdo.php';
-
+// Controllers, helpers, and PDO already loaded by index.php
 $admin     = new AdminController();
 $employees = $admin->getAllEmployees();
 
@@ -74,7 +70,7 @@ $bookings = $stmt->fetchAll();
                     <td><?= $b['created_at'] ?></td>
 
                     <td>
-                        <form method="POST" action="updateBooking.php">
+                        <form method="POST" action="/YardProProject/?route=admin/update-booking">
                             <input type="hidden" name="booking_id" value="<?= $b['booking_id'] ?>">
 
                             <select name="employee_id" class="form-select form-select-sm mb-2">
@@ -102,7 +98,7 @@ $bookings = $stmt->fetchAll();
             </tbody>
         </table>
 
-        <a href="home.php" class="btn btn-secondary mt-3">Back</a>
+        <a href="/YardProProject/?route=admin/home" class="btn btn-secondary mt-3">Back</a>
     </div>
 
     <script>
@@ -113,7 +109,7 @@ $bookings = $stmt->fetchAll();
             msg.style.opacity = "0";
             setTimeout(() => msg.remove(), 500);
         }
-    }, 3000);
+    }, 2000);
     </script>
 </body>
 

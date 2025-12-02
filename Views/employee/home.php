@@ -1,10 +1,8 @@
 <?php
-session_start();
-require_once '../../controllers/EmployeeController.php';
-require_once '../../helpers/flash.php';
+// Controllers and helpers already loaded by index.php
 
-if (!isset($_SESSION['employee_logged_in'])) {
-    header('Location: ../admin/login.php');
+if (!isset($_SESSION['employee_id'])) {
+    header('Location: /YardProProject/?route=employee/login');
     exit();
 }
 
@@ -24,10 +22,10 @@ $bookings   = $controller->getAssignedRequests($_SESSION['employee_id']);
 
 <nav class="navbar navbar-dark navbar-expand-lg" style="background:#2e7d32;">
     <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="home.php">YardPro Employee</a>
+        <a class="navbar-brand fw-bold" href="/YardProProject/?route=employee/home">YardPro Employee</a>
         <ul class="navbar-nav ms-auto">
-            <li class="nav-item"><a class="nav-link text-white" href="editProfile.php">Edit Profile</a></li>
-            <li class="nav-item"><a class="nav-link text-warning" href="logout.php">Logout</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="/YardProProject/?route=employee/edit-profile">Edit Profile</a></li>
+            <li class="nav-item"><a class="nav-link text-warning" href="/YardProProject/?route=employee/logout">Logout</a></li>
         </ul>
     </div>
 </nav>
@@ -62,7 +60,8 @@ $bookings   = $controller->getAssignedRequests($_SESSION['employee_id']);
                 <td><?= htmlspecialchars($b['status']) ?></td>
                 <td><?= $b['scheduled_for'] ?></td>
                 <td>
-                    <form method="POST" action="updateStatus.php">
+                    <form method="POST" action="/YardProProject/index.php">
+                        <input type="hidden" name="route" value="employee/update-status">
                         <input type="hidden" name="booking_id" value="<?= $b['booking_id'] ?>">
 
                         <select name="status" class="form-select form-select-sm">
@@ -90,7 +89,7 @@ setTimeout(() => {
         msg.style.opacity = "0";
         setTimeout(() => msg.remove(), 500);
     }
-}, 3000);
+}, 2000);
 </script>
 
 </body>

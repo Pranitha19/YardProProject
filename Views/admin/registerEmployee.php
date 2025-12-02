@@ -1,12 +1,12 @@
 <?php
-session_start();
-require_once '../../controllers/AdminController.php';
-$controller = new AdminController();
+// Controllers already loaded by index.php
 
-if (!isset($_SESSION['admin_logged_in'])) {
-    header('Location: login.php');
+if (!isset($_SESSION['admin_id'])) {
+    header('Location: /YardProProject/?route=admin/login');
     exit();
 }
+
+$controller = new AdminController();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <textarea name="address" class="form-control mb-3"></textarea>
 
             <button class="btn btn-success w-100">Register Employee</button>
-            <a href="home.php" class="btn btn-secondary w-100 mt-3">Back</a>
+            <a href="/YardProProject/?route=admin/home" class="btn btn-secondary w-100 mt-3">Back</a>
         </form>
     </div>
 </body>

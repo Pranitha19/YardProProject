@@ -15,10 +15,13 @@ define('MODELS_PATH', BASE_PATH . '/Models');
 
 // Include required files
 require_once BASE_PATH . '/config/pdo.php';
+require_once BASE_PATH . '/helpers/flash.php';
 require_once CONTROLLERS_PATH . '/UserController.php';
+require_once CONTROLLERS_PATH . '/AdminController.php';
+require_once CONTROLLERS_PATH . '/EmployeeController.php';
 
-// Get the requested route from URL
-$request = isset($_GET['route']) ? trim($_GET['route'], '/') : '';
+// Get the requested route from URL or POST data
+$request = isset($_GET['route']) ? trim($_GET['route'], '/') : (isset($_POST['route']) ? trim($_POST['route'], '/') : '');
 
 // Split route into parts (e.g., "user/home" → ['user', 'home'])
 $routeParts = array_filter(explode('/', $request));
@@ -96,6 +99,126 @@ if ($userType === 'user') {
     // Route: Fetch slots (AJAX endpoint)
     if ($page === 'fetch-slots') {
         include VIEWS_PATH . '/user/fetch_slots.php';
+        exit;
+    }
+}
+
+/**
+ * ==================== ADMIN ROUTES ====================
+ */
+
+// Route: Admin Login page (accessible without authentication)
+if ($userType === 'admin' && $page === 'login') {
+    include VIEWS_PATH . '/admin/login.php';
+    exit;
+}
+
+// Route: Admin Logout (requires authentication)
+if ($userType === 'admin' && $page === 'logout') {
+    if (isset($_SESSION['admin_id'])) {
+        session_destroy();
+        header('Location: /YardProProject/?route=admin/login');
+        exit;
+    }
+}
+
+// Protected Admin Routes - require authentication
+if ($userType === 'admin') {
+    if (!isset($_SESSION['admin_id'])) {
+        header('Location: /YardProProject/?route=admin/login&msg=Please+login');
+        exit;
+    }
+
+    // Route: Admin home/dashboard
+    if ($page === 'home' || $page === null) {
+        include VIEWS_PATH . '/admin/home.php';
+        exit;
+    }
+
+    // Route: View all bookings
+    if ($page === 'view-bookings') {
+        include VIEWS_PATH . '/admin/viewAllBookings.php';
+        exit;
+    }
+
+    // Route: Update booking status
+    if ($page === 'update-booking') {
+        include VIEWS_PATH . '/admin/updateBooking.php';
+        exit;
+    }
+
+    // Route: Add service center
+    if ($page === 'add-service-center') {
+        include VIEWS_PATH . '/admin/addServiceCenter.php';
+        exit;
+    }
+
+    // Route: Edit service center
+    if ($page === 'edit-service-center') {
+        include VIEWS_PATH . '/admin/editServiceCenter.php';
+        exit;
+    }
+
+    // Route: Delete service center
+    if ($page === 'delete-service-center') {
+        include VIEWS_PATH . '/admin/deleteServiceCenter.php';
+        exit;
+    }
+
+    // Route: Register employee
+    if ($page === 'register-employee') {
+        include VIEWS_PATH . '/admin/registerEmployee.php';
+        exit;
+    }
+}
+
+/**
+ * ==================== EMPLOYEE ROUTES ====================
+ */
+
+// Route: Employee Login page (accessible without authentication)
+if ($userType === 'employee' && $page === 'login') {
+    include VIEWS_PATH . '/employee/login.php';
+    exit;
+}
+
+// Route: Employee Logout (requires authentication)
+if ($userType === 'employee' && $page === 'logout') {
+    if (isset($_SESSION['employee_id'])) {
+        session_destroy();
+        header('Location: /YardProProject/?route=employee/login');
+        exit;
+    }
+}
+
+// Protected Employee Routes - require authentication
+if ($userType === 'employee') {
+    if (!isset($_SESSION['employee_id'])) {
+        header('Location: /YardProProject/?route=employee/login&msg=Please+login');
+        exit;
+    }
+
+    // Route: Employee home/dashboard
+    if ($page === 'home' || $page === null) {
+        include VIEWS_PATH . '/employee/home.php';
+        exit;
+    }
+
+    // Route: View assigned requests
+    if ($page === 'view-requests') {
+        include VIEWS_PATH . '/employee/viewRequest.php';
+        exit;
+    }
+
+    // Route: Update request status
+    if ($page === 'update-status') {
+        include VIEWS_PATH . '/employee/updateStatus.php';
+        exit;
+    }
+
+    // Route: Edit profile
+    if ($page === 'edit-profile') {
+        include VIEWS_PATH . '/employee/editProfile.php';
         exit;
     }
 }
