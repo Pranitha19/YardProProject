@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once __DIR__ . '/../../Controllers/UserController.php';
 
 $controller = new UserController();
@@ -15,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($user) {
         $_SESSION['user_id'] = $user['user_id'];
-        header("Location: home.php");
+        header("Location: /YardProProject/?route=user/home");
         exit;
     } else {
         $error = "Invalid email or password.";
@@ -51,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit" class="btn-primary">Login</button>
         </form>
 
-        <p> <a href="register.php" class="link">Not registered? Create an account</a></p>
+        <p> <a href="/YardProProject/?route=user/register" class="link">Not registered? Create an account</a></p>
     </div>
 
    

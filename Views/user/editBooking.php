@@ -4,7 +4,7 @@ require_once __DIR__ . '/../../Controllers/UserController.php';
 
 $user_id = $_SESSION['user_id'] ?? null;
 if (!$user_id) {
-    header("Location: login.php");
+    header("Location: /YardProProject/?route=user/login");
     exit;
 }
 
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $controller->updateBooking($booking_id, $newDate, $newTime);
 
                 // PRG: Redirect back to viewBookings with success message
-                header("Location: viewBookings.php?msg=Booking+updated+successfully");
+                header("Location: /YardProProject/?route=user/view-bookings&msg=Booking+updated+successfully");
                 exit;
             }
         }

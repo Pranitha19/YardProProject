@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once __DIR__ . '/../../Controllers/UserController.php';
 
 $controller = new UserController();
@@ -73,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <input type="text" name="address" placeholder="Address" required>
             <button type="submit" class="btn-primary">Register</button>
         </form>
-        <a href="login.php" class="link">Already have an account? Login</a>
+        <a href="/YardProProject/?route=user/login" class="link">Already have an account? Login</a>
     </div>
 
 </body>

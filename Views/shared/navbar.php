@@ -3,17 +3,18 @@ require_once __DIR__ . '/../../Models/VisitTracker.php';
 $tracker = new VisitTracker();
 $tracker->track();
 
-$current_page = basename($_SERVER['PHP_SELF']);
+// Get current route from URL parameter
+$current_route = isset($_GET['route']) ? $_GET['route'] : '';
 ?>
-<link rel="stylesheet" href="/YardProProject/static/css/navbar.css">
+<link rel="stylesheet" href="/YardProProject/Static/css/navbar.css">
 
-<div class="navbar">
+<div class="navbar-custom">
   <div class="nav-left">
-    <a href="../user/editProfile.php" class="<?= $current_page === 'editProfile.php' ? 'active' : '' ?>">Edit Profile</a>
-     <a href="../user/home.php" class="<?= $current_page === 'home.php' ? 'active' : '' ?>">Home</a>
-    <a href="../user/viewBookings.php" class="<?= $current_page === ('viewBookings.php'||'editBooking.php') ? 'active' : '' ?>">View Booking</a>
-     </div>
+    <a href="/YardProProject/?route=user/edit-profile" class="<?= strpos($current_route, 'edit-profile') !== false ? 'active' : '' ?>">Edit Profile</a>
+    <a href="/YardProProject/?route=user/home" class="<?= strpos($current_route, 'user/home') !== false || $current_route === '' ? 'active' : '' ?>">Home</a>
+    <a href="/YardProProject/?route=user/view-bookings" class="<?= strpos($current_route, 'view-bookings') !== false || strpos($current_route, 'edit-booking') !== false ? 'active' : '' ?>">View Booking</a>
+  </div>
   <div class="nav-right">
-   <a href="../user/logout.php">Logout</a>
+    <a href="/YardProProject/?route=user/logout">Logout</a>
   </div>
 </div>

@@ -53,7 +53,7 @@ $centers = $controller->getServiceCenters($search);
                     <p><b>Timings:</b> <?= htmlspecialchars($center['timings_note'] ?: '10 AM - 6 PM') ?></p>
                 </div>
 
-                <form method="post" action="bookService.php">
+                <form method="post" action="/YardProProject/?route=user/book-service">
                     <input type="hidden" name="center_id" value="<?= $center['center_id'] ?>">
                     <button type="submit" class="book-btn">Book</button>
                 </form>

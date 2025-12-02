@@ -3,7 +3,7 @@ require_once __DIR__ . '/../../session_guard.php';
 require_once __DIR__ . '/../../Controllers/UserController.php';
 
 $user_id = $_SESSION['user_id'] ?? null;
-if (!$user_id) { header("Location: login.php"); exit; }
+if (!$user_id) { header("Location: /YardProProject/?route=user/login"); exit; }
 
 $controller = new UserController();
 
@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['confirm_booking'])) {
     $result = $controller->processBooking($user_id, $center_id, $data);
 
     if ($result === "success") {
-        header("Location: viewBookings.php?msg=Booking+successful");
+        header("Location: /YardProProject/?route=user/view-bookings&msg=Booking+successful");
         exit;
     } elseif ($result === "Slot Full") {
         $message = "This time slot is full. Choose another time.";
@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
         timeSelect.innerHTML = "<option>Loading...</option>";
 
         const res = await fetch(
-            `/YardProProject/Views/user/fetch_slots.php?center_id=${centerId}&date=${selectedDate}`
+            `/YardProProject/?route=user/fetch-slots&center_id=${centerId}&date=${selectedDate}`
         );
 
         const data = await res.json();

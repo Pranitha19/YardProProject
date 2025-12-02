@@ -10,7 +10,7 @@ $user = $controller->getUserDetails($user_id);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $controller->updateProfile($user_id, $_POST);
-    header("Location: editProfile.php?msg=Profile updated successfully");
+    header("Location: /YardProProject/?route=user/edit-profile&msg=Profile updated successfully");
     exit;
 }
 
@@ -21,12 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
   <meta charset="UTF-8">
   <title>Edit Profile - YardPro</title>
-  <link rel="stylesheet" href="../../static/css/user.css">
+  <link rel="stylesheet" href="/YardProProject/Static/css/edit_profile.css">
 </head>
 <body>
 
   <!-- Include shared navbar -->
-  <?php include __DIR__ . '/../shared/navbar.php'; ?>
+   <?php include __DIR__ . '/../shared/navbar.php'; ?>
+
 
   <div class="edit-container">
     <h2>Edit Profile</h2>
