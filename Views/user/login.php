@@ -33,26 +33,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
-     <div class="auth-card">
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <div class="auth-card">
     <h2>YardPro</h2>
     <h3>Enter your login credentials</h3>
 
         <?php if (!empty($error)) : ?>
             <p class="error"><?= $error ?></p>
         <?php endif; ?>
-
-        <form method="POST">
+        <form method="POST" id="loginForm">
             <label>Email</label>
-            <input type="email" name="email" placeholder="Enter your Email"required>
+            <input type="email" id="email" name="email" placeholder="Enter your Email" required>
 
             <label>Password</label>
-            <input type="password" name="password" placeholder="Enter your Password" required>
+            <input type="password" id="password" name="password" placeholder="Enter your Password" required>
 
             <button type="submit" class="btn-primary">Login</button>
         </form>
 
         <p> <a href="register.php" class="link">Not registered? Create an account</a></p>
     </div>
+
+   
+<script>
+$(document).ready(function(){
+
+    $("#loginForm").on("submit", function(e){
+        let email = $("#email").val().trim();
+        let password = $("#password").val().trim();
+
+        if(email === "" || password === ""){
+            alert("Email and Password cannot be empty!");
+            e.preventDefault(); // stop form submit
+        }
+    });
+
+});
+</script>
 
 </body>
 

@@ -54,6 +54,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['confirm_booking'])) {
     <?php if (!empty($message)): ?>
         <p class="error"><?= htmlspecialchars($message) ?></p>
     <?php endif; ?>
+<button id="toggleBookForm" class="btn btn-primary" style="margin-bottom: 10px;">
+    Show / Hide Booking Form
+</button>
+
+<div id="bookingForm" style="display: none;">
 
     <form method="post">
 
@@ -103,7 +108,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['confirm_booking'])) {
 
     </form>
 </div>
-
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 // === AUTO LOAD AVAILABLE SLOTS ===
 document.addEventListener("DOMContentLoaded", () => {
@@ -169,6 +175,15 @@ for (let y = currentYear; y <= currentYear + 10; y++) {
     opt.textContent = y;
     yearSelect.appendChild(opt);
 }
+
+
+$(document).ready(function(){
+
+    $("#toggleBookForm").click(function(){
+        $("#bookingForm").slideToggle("fast");  
+    });
+
+});
 </script>
 
 
