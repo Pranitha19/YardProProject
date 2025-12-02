@@ -23,7 +23,8 @@ $centers = $controller->getServiceCenters($search);
 
 <!-- Search Bar -->
 <div class="search-bar">
-    <form method="get" action="">
+    <form method="get" action="/YardProProject/index.php">
+        <input type="hidden" name="route" value="user/home">
         <input type="text" name="search"
                placeholder="Search service centers by name..."
                value="<?= htmlspecialchars($search) ?>">
@@ -61,6 +62,18 @@ $centers = $controller->getServiceCenters($search);
         <?php endforeach; ?>
     <?php endif; ?>
 </div>
+
+<script>
+// Flash message auto-hide
+setTimeout(() => {
+    const msg = document.querySelector('.flash-message');
+    if (msg) {
+        msg.style.transition = "opacity 0.5s";
+        msg.style.opacity = "0";
+        setTimeout(() => msg.remove(), 500);
+    }
+}, 2000);
+</script>
 
 </body>
 </html>

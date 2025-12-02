@@ -2,7 +2,6 @@
 require_once __DIR__ . '/../../Controllers/UserController.php';
 
 $controller = new UserController();
-$error = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -17,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: /YardProProject/?route=user/home");
         exit;
     } else {
-        $error = "Invalid email or password.";
+        setFlash('danger', 'Invalid email or password.');
     }
 }
 ?>
@@ -37,9 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h2>YardPro</h2>
     <h3>Enter your login credentials</h3>
 
-        <?php if (!empty($error)) : ?>
-            <p class="error"><?= $error ?></p>
-        <?php endif; ?>
+        <?php showFlash(); ?>
         <form method="POST" id="loginForm">
             <label>Email</label>
             <input type="email" id="email" name="email" placeholder="Enter your Email" required>
@@ -68,6 +65,16 @@ $(document).ready(function(){
     });
 
 });
+
+// Flash message auto-hide
+setTimeout(() => {
+    const msg = document.querySelector('.flash-message');
+    if (msg) {
+        msg.style.transition = "opacity 0.5s";
+        msg.style.opacity = "0";
+        setTimeout(() => msg.remove(), 500);
+    }
+}, 2000);
 </script>
 
 </body>

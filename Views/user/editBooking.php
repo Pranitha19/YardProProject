@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../session_guard.php';
+require_once __DIR__ . '/../../helpers/flash.php';
 require_once __DIR__ . '/../../Controllers/UserController.php';
 
 $user_id = $_SESSION['user_id'] ?? null;
@@ -13,16 +14,18 @@ $controller = new UserController();
 // Get booking_id from query string
 $booking_id = $_GET['id'] ?? null;
 if (!$booking_id) {
-    die("Invalid booking request.");
+    setFlash('danger', 'Invalid booking request.');
+    header("Location: /YardProProject/?route=user/view-bookings");
+    exit;
 }
 
 // Fetch booking from model via controller
 $booking = $controller->getBookingById($booking_id);
 if (!$booking || $booking['user_id'] != $user_id) {
-    die("Booking not found or access denied.");
+    setFlash('danger', 'Booking not found or access denied.');
+    header("Location: /YardProProject/?route=user/view-bookings");
+    exit;
 }
-
-$error = "";
 
 // Handle form submission (update booking)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -30,12 +33,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $newTime = $_POST['booking_time'] ?? '';
 
     if ($newDate === '' || $newTime === '') {
-        $error = "Please select both date and time.";
+        setFlash('warning', 'Please select both date and time.');
     } else {
         // Rule 1: Date must not be less than today
         $today = date('Y-m-d');
         if ($newDate < $today) {
-            $error = "Selected date cannot be before today.";
+            setFlash('warning', 'Selected date cannot be before today.');
         } else {
             // Rule 2: Check if slot is already booked (by another booking)
             $isTaken = $controller->isSlotTaken(
@@ -46,13 +49,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
 
             if ($isTaken) {
-                $error = "This time slot is already booked. Please choose another slot.";
+                setFlash('warning', 'This time slot is already booked. Please choose another slot.');
             } else {
                 // ✅ Update only date & time (no auto cancel)
                 $controller->updateBooking($booking_id, $newDate, $newTime);
 
                 // PRG: Redirect back to viewBookings with success message
-                header("Location: /YardProProject/?route=user/view-bookings&msg=Booking+updated+successfully");
+                setFlash('success', 'Booking updated successfully!');
+                header("Location: /YardProProject/?route=user/view-bookings");
                 exit;
             }
         }
@@ -75,9 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="book-container mt-4">
   <h2>Edit Booking</h2>
 
-  <?php if (!empty($error)): ?>
-    <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
-  <?php endif; ?>
+  <?php showFlash(); ?>
 
   <form method="post">
     <!-- Service Center (read-only) -->
@@ -161,9 +163,17 @@ document.addEventListener("DOMContentLoaded", () => {
       timeSelect.innerHTML = "<option>Error loading slots</option>";
     }
   });
+
+  // Flash message auto-hide
+  setTimeout(() => {
+      const msg = document.querySelector('.flash-message');
+      if (msg) {
+          msg.style.transition = "opacity 0.5s";
+          msg.style.opacity = "0";
+          setTimeout(() => msg.remove(), 500);
+      }
+  }, 2000);
 });
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

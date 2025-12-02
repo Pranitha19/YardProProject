@@ -2,8 +2,6 @@
 require_once __DIR__ . '/../../Controllers/UserController.php';
 
 $controller = new UserController();
-$error = "";
-$success = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -22,9 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $registered = $controller->register($payload);
 
     if ($registered) {
-        $success = "Registration successful! You can now login.";
+        setFlash('success', 'Registration successful! You can now login.');
+        header('Location: /YardProProject/?route=user/login');
+        exit;
     } else {
-        $error = "Registration failed. Email may already exist.";
+        setFlash('danger', 'Registration failed. Email may already exist.');
     }
 }
 ?>
@@ -43,13 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="auth-card">
     <h2>Create Your Account</h2>
 
-        <?php if (!empty($error)) : ?>
-            <p class="error"><?= $error ?></p>
-        <?php endif; ?>
-
-        <?php if (!empty($success)) : ?>
-            <p class="success"><?= $success ?></p>
-        <?php endif; ?>
+        <?php showFlash(); ?>
 
         <form method="POST">
 
@@ -74,6 +68,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
         <a href="/YardProProject/?route=user/login" class="link">Already have an account? Login</a>
     </div>
+
+<script>
+// Flash message auto-hide
+setTimeout(() => {
+    const msg = document.querySelector('.flash-message');
+    if (msg) {
+        msg.style.transition = "opacity 0.5s";
+        msg.style.opacity = "0";
+        setTimeout(() => msg.remove(), 500);
+    }
+}, 2000);
+</script>
 
 </body>
 
