@@ -22,7 +22,7 @@ class Admin
         }
 
         if (password_verify($password, $admin['password_hash'])) {
-            return $admin; // it returns full row so we can store name/email
+            return $admin;
         }
 
         return false;

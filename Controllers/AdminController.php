@@ -41,7 +41,6 @@ class AdminController {
         return $this->employeeModel->register($data);
     }
 
-    // NEW helper for edit page
     public function getCenterTimings($center_id) {
         return $this->serviceCenterModel->getCenterTimings((int)$center_id);
     }

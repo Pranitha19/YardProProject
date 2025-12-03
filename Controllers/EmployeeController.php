@@ -12,8 +12,6 @@ class EmployeeController {
         $this->bookingModel  = new Booking();
     }
 
-    //Employee profile updates
-
     public function getEmployee( $employee_id ) {
         return $this->employeeModel->getEmployeeById( $employee_id );
     }
@@ -25,8 +23,6 @@ class EmployeeController {
     public function updateEmployeePassword( $employee_id, $newPassword ) {
         return $this->employeeModel->updateEmployeePassword( $employee_id, $newPassword );
     }
-
-    //Booking operations ( Employee side )
 
     public function getAssignedRequests( $employee_id ) {
         return $this->bookingModel->getRequestsByEmployee( $employee_id );
