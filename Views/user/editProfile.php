@@ -1,6 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../../session_guard.php';
 require_once __DIR__ . '/../../helpers/flash.php';
 require_once __DIR__ . '/../../Controllers/UserController.php';
 

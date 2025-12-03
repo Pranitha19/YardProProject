@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../../session_guard.php';
 require_once __DIR__ . '/../../helpers/flash.php';
 require_once __DIR__ . '/../../Controllers/UserController.php';
 
@@ -102,7 +101,7 @@ $bookings = $controller->getUserBookings($user_id);
 
         <?php if ($hoursLeft > 24): ?>
             
-            <a href="/YardProProject/Views/user/editBooking.php?id=<?= $b['booking_id'] ?>"
+            <a href="/YardProProject/?route=user/edit-booking&id=<?= $b['booking_id'] ?>"
                class="btn btn-warning btn-sm">Edit</a>
 
             <form method="post" style="display:inline;">
