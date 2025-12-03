@@ -11,7 +11,7 @@ if (!$user_id) {
 
 $controller = new UserController();
 
-// Get booking_id from query string
+// Get booking_id from query 
 $booking_id = $_GET['id'] ?? null;
 if (!$booking_id) {
     setFlash('danger', 'Invalid booking request.');
@@ -27,7 +27,7 @@ if (!$booking || $booking['user_id'] != $user_id) {
     exit;
 }
 
-// Handle form submission (update booking)
+// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $newDate = $_POST['booking_date'] ?? '';
     $newTime = $_POST['booking_time'] ?? '';
@@ -35,23 +35,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($newDate === '' || $newTime === '') {
         setFlash('warning', 'Please select both date and time.');
     } else {
-        // Rule 1: Date must not be less than today
+        // Date must not be less than today
         $today = date('Y-m-d');
         if ($newDate < $today) {
             setFlash('warning', 'Selected date cannot be before today.');
         } else {
-            // Rule 2: Check if slot is already booked (by another booking)
+            // Check if slot is already booked (by another booking)
             $isTaken = $controller->isSlotTaken(
                 $booking['center_id'],
                 $newDate,
                 $newTime,
-                $booking_id  // exclude this booking itself
+                $booking_id  
             );
 
             if ($isTaken) {
                 setFlash('warning', 'This time slot is already booked. Please choose another slot.');
             } else {
-                // ✅ Update only date & time (no auto cancel)
+                // Update only date & time 
                 $controller->updateBooking($booking_id, $newDate, $newTime);
 
                 // PRG: Redirect back to viewBookings with success message
@@ -82,34 +82,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <?php showFlash(); ?>
 
   <form method="post">
-    <!-- Service Center (read-only) -->
     <div class="mb-3">
       <label class="form-label">Service Center</label>
       <input type="text" class="form-control"
              value="<?= htmlspecialchars($booking['service_name']) ?>" readonly>
     </div>
 
-    <!-- Current Date -->
     <div class="mb-3">
       <label class="form-label">Current Date</label>
       <input type="text" class="form-control"
              value="<?= htmlspecialchars($booking['booking_date']) ?>" readonly>
     </div>
 
-    <!-- Current Time -->
     <div class="mb-3">
       <label class="form-label">Current Time</label>
       <input type="text" class="form-control"
              value="<?= htmlspecialchars($booking['booking_time']) ?>" readonly>
     </div>
 
-    <!-- New Date -->
     <div class="mb-3">
       <label class="form-label">New Date</label>
       <input type="date" name="booking_date" id="booking_date" class="form-control" required>
     </div>
 
-    <!-- New Time (2-hour slots) -->
     <div class="mb-3">
       <label class="form-label">New Time (2-hour slots)</label>
       <select name="booking_time" id="booking_time" class="form-select" required>
@@ -131,7 +126,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const today = new Date().toISOString().split("T")[0];
   dateInput.min = today;
 
-  // When date changes → load available slots for that center & date
   dateInput.addEventListener("change", async () => {
     const selectedDate = dateInput.value;
     if (!selectedDate) return;
@@ -164,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Flash message auto-hide
+  // Flash message
   setTimeout(() => {
       const msg = document.querySelector('.flash-message');
       if (msg) {
