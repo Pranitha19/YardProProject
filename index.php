@@ -4,9 +4,7 @@
  * This file acts as the main entry point for the application
  * Handles routing, authentication, and request dispatching
  */
-
 session_start();
-
 // Define base paths
 define('BASE_PATH', __DIR__);
 define('CONTROLLERS_PATH', BASE_PATH . '/Controllers');
@@ -266,9 +264,7 @@ if ($request === '' || $userType === null) {
     exit;
 }
 
-/**
- * ==================== 404 - PAGE NOT FOUND ====================
- */
+//page not found
 
 // If no route matched, show 404 error
 if (file_exists(VIEWS_PATH . '/errors/404.php')) {

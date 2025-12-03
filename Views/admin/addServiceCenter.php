@@ -113,27 +113,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
                         </div>
     <script>
-    document.querySelectorAll('.day-open').forEach(cb => {
-        const row = cb.closest('tr');
-        const times = row.querySelectorAll('input[type="time"]');
+document.querySelectorAll('.day-open').forEach(cb => {
+    const row = cb.closest('tr');
+    const times = row.querySelectorAll('input[type="time"]');
 
-        function sync() {
-            const enabled = cb.checked;
-            times.forEach(t => t.disabled = !enabled);
-        }
-
-        cb.addEventListener('change', sync);
-        sync();
-    });
-    <script>
-    setTimeout(() => {
-        const msg = document.querySelector('.flash-message');
-        if (msg) {
-            msg.style.transition = "opacity 0.5s";
-            msg.style.opacity = "0";
-            setTimeout(() => msg.remove(), 500);
-        }
-    }, 2000);
+    function sync() {
+        const enabled = cb.checked;
+        times.forEach(t => t.disabled = !enabled);
+    }
+    cb.addEventListener('change', sync);
+    sync();
+});
     </script>
+
+<script>
+setTimeout(() => {
+    const msg = document.querySelector('.flash-message');
+    if (msg) {
+        msg.style.transition = "opacity 0.5s";
+        msg.style.opacity = "0";
+        setTimeout(() => msg.remove(), 500);
+    }
+}, 2000);
+</script>
+
 </body>
 </html>
