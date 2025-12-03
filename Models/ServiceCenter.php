@@ -3,7 +3,6 @@ require_once __DIR__ . '/../config/pdo.php';
 
 class ServiceCenter
 {
-    // Creates service center
     public function addServiceCenter(array $data, array $timings): int
     {
         global $pdo;
@@ -93,9 +92,6 @@ class ServiceCenter
             exit;
         }
     }
-
-
-    // All centers
     public function getAllCenters(): array
     {
         global $pdo;
@@ -130,9 +126,6 @@ class ServiceCenter
 
         return $result;
     }
-
-
-    // Delete center
     public function deleteServiceCenter(int $centerId): bool
     {
         global $pdo;

@@ -1,7 +1,4 @@
 <?php
-session_start();
-// Controllers and helpers already loaded by index.php
-
 if (!isset($_SESSION['employee_id'])) {
     header('Location: /YardProProject/?route=employee/login');
     exit();

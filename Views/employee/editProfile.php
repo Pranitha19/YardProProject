@@ -1,5 +1,4 @@
 <?php
-// Controllers and helpers already loaded by index.php
 
 if (!isset($_SESSION['employee_id'])) {
     header('Location: /YardProProject/?route=employee/login');
@@ -41,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// re-fetch after possible changes on previous request
+// re-fetches after possible changes on previous request
 $employee = $controller->getEmployee($_SESSION['employee_id']);
 ?>
 <!DOCTYPE html>

@@ -4,7 +4,6 @@ if (!isset($_SESSION['admin_id'])) {
     exit();
 }
 
-// Controllers and helpers already loaded by index.php
 $controller = new AdminController();
 $centers    = $controller->getAllCenters();
 ?>

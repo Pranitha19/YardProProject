@@ -4,7 +4,6 @@ if (!isset($_SESSION['admin_id'])) {
     exit();
 }
 
-// Controllers, helpers, and PDO already loaded by index.php
 $admin     = new AdminController();
 $employees = $admin->getAllEmployees();
 

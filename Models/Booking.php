@@ -39,8 +39,6 @@ class Booking {
         return $stmt->execute( [ $employee_id, $booking_id ] );
     }
 
-    //Admin update status for any booking
-
     public function adminUpdateStatus( $booking_id, $status ) {
         global $pdo;
 

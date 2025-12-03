@@ -1,11 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-// PDO, AdminController, and helpers are already loaded by index.php
-// No need to require them again
-
 $controller = new AdminController();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -13,7 +6,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email    = trim($_POST['email']);
     $password = trim($_POST['password']);
 
-    // Admin login
     $adminRow = $controller->login($email, $password);
 
     if ($adminRow) {
@@ -25,7 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // Employee login
     $stmt = $pdo->prepare('SELECT * FROM employees WHERE email = ?');
     $stmt->execute([$email]);
     $employee = $stmt->fetch();
