@@ -34,10 +34,7 @@ $page = isset($routeParts[1]) ? $routeParts[1] : null;
 $isAuthenticated = isset($_SESSION['user_id']);
 $userId = $_SESSION['user_id'] ?? null;
 
-/**
- * ==================== USER ROUTES ====================
- */
-
+//user routes
 // Route: Login page (accessible without authentication)
 if ($userType === 'user' && $page === 'login') {
     include VIEWS_PATH . '/user/login.php';
@@ -102,10 +99,7 @@ if ($userType === 'user') {
         exit;
     }
 }
-
-/**
- * ==================== ADMIN ROUTES ====================
- */
+//Admin routes
 
 // Route: Admin Login page (accessible without authentication)
 if ($userType === 'admin' && $page === 'login') {
@@ -116,8 +110,7 @@ if ($userType === 'admin' && $page === 'login') {
 // Route: Admin Logout (requires authentication)
 if ($userType === 'admin' && $page === 'logout') {
     if (isset($_SESSION['admin_id'])) {
-        session_destroy();
-        header('Location: /YardProProject/?route=admin/login');
+    include VIEWS_PATH. '/admin/logout.php';
         exit;
     }
 }
@@ -172,9 +165,7 @@ if ($userType === 'admin') {
     }
 }
 
-/**
- * ==================== EMPLOYEE ROUTES ====================
- */
+//Employee routes
 
 // Route: Employee Login page (accessible without authentication)
 if ($userType === 'employee' && $page === 'login') {
@@ -185,8 +176,7 @@ if ($userType === 'employee' && $page === 'login') {
 // Route: Employee Logout (requires authentication)
 if ($userType === 'employee' && $page === 'logout') {
     if (isset($_SESSION['employee_id'])) {
-        session_destroy();
-        header('Location: /YardProProject/?route=employee/login');
+    include VIEWS_PATH. '/employee/logout.php';
         exit;
     }
 }

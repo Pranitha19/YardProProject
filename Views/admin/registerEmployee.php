@@ -14,9 +14,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Name, Email, and Password are required.';
     } else {
         if ($controller->registerEmployee($_POST)) {
-            $msg = 'Employee registered successfully!';
+            setFlash('success', 'Employee registered successfully!');
         } else {
-            $error = 'Error registering employee. Email may already exist.';
+            setFlash('danger', 'Error registering employee. Email may already exist.');
         }
     }
 }
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php if (!empty($error)): ?>
             <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
-
+        <?php showFlash(); ?>
         <form method="POST">
             <label class="form-label">Full Name *</label>
             <input type="text" name="name" class="form-control mb-3" required>
@@ -63,6 +63,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="/YardProProject/?route=admin/home" class="btn btn-secondary w-100 mt-3">Back</a>
         </form>
     </div>
+    <script>
+    setTimeout(() => {
+        const msg = document.querySelector('.flash-message');
+        if (msg) {
+            msg.style.transition = "opacity 0.5s";
+            msg.style.opacity = "0";
+            setTimeout(() => msg.remove(), 500);
+        }
+    }, 2000);
+    </script>
 </body>
 
 </html>

@@ -219,7 +219,7 @@ if (isset($_GET['center_id']) && !empty($_GET['center_id'])) {
             msg.style.opacity = "0";
             setTimeout(() => msg.remove(), 500);
         }
-    }, 2000);
+    }, 3000);
     </script>
 </body>
 

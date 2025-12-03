@@ -109,7 +109,7 @@ $bookings = $stmt->fetchAll();
             msg.style.opacity = "0";
             setTimeout(() => msg.remove(), 500);
         }
-    }, 2000);
+    }, 3000);
     </script>
 </body>
 

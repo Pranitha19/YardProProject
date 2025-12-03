@@ -111,8 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button class="btn btn-success">Add Center</button>
             <a href="/YardProProject/?route=admin/home" class="btn btn-secondary">Back</a>
         </form>
-    </div>
-
+                        </div>
     <script>
     document.querySelectorAll('.day-open').forEach(cb => {
         const row = cb.closest('tr');
@@ -126,8 +125,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         cb.addEventListener('change', sync);
         sync();
     });
-<script>
-setTimeout(() => {
+    <script>
+    setTimeout(() => {
         const msg = document.querySelector('.flash-message');
         if (msg) {
             msg.style.transition = "opacity 0.5s";
@@ -135,8 +134,6 @@ setTimeout(() => {
             setTimeout(() => msg.remove(), 500);
         }
     }, 2000);
-</script>
-
+    </script>
 </body>
-
 </html>

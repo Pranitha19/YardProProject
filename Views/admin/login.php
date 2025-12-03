@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['admin_id'] = $adminRow['admin_id'];
         $_SESSION['admin_email']     = $adminRow['email'] ?? $email;
         $_SESSION['admin_name']      = $adminRow['name'] ?? 'Admin';
-
+        setFlash('success', 'Logged in successfully as Admin.');
         header('Location: /YardProProject/?route=admin/home');
         exit();
     }
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($employee && password_verify($password, $employee['password_hash'])) {
         $_SESSION['employee_id']        = $employee['employee_id'];
         $_SESSION['employee_name']      = $employee['name'];
-
+        setFlash('success', 'Logged in successfully as Employee.');
         header('Location: /YardProProject/?route=employee/home');
         exit();
     }
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             msg.style.opacity = "0";
             setTimeout(() => msg.remove(), 500);
         }
-    }, 2000);
+    }, 3000);
     </script>
 </body>
 
