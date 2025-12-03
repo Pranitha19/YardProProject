@@ -1,5 +1,4 @@
 <?php
-// Controllers and helpers already loaded by index.php
 
 $controller = new AdminController();
 $centers    = $controller->getAllCenters();
@@ -14,7 +13,6 @@ $daysOfWeek = [
     7 => 'Sunday',
 ];
 
-// Handle form submit
 if (isset($_POST['update'])) {
     $centerData = [
         'center_id'   => $_POST['center_id'],

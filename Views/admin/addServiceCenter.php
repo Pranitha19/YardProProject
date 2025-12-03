@@ -1,7 +1,5 @@
 <?php
 
-// Controllers and helpers already loaded by index.php
-
 $controller = new AdminController();
 
 $daysOfWeek = [
