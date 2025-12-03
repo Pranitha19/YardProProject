@@ -1,13 +1,10 @@
 <?php
-session_start();
-if (!isset($_SESSION['admin_logged_in'])) {
-    header('Location: login.php');
+if (!isset($_SESSION['admin_id'])) {
+    header('Location: /YardProProject/?route=admin/login');
     exit();
 }
 
-require_once '../../controllers/AdminController.php';
-require_once '../../helpers/flash.php';
-
+// Controllers and helpers already loaded by index.php
 $controller = new AdminController();
 $centers    = $controller->getAllCenters();
 ?>
@@ -53,21 +50,22 @@ function formatTimings(array $timings): string {
 <body>
     <nav class="navbar navbar-expand-lg shadow-sm"style="background:#2e7d32;">
         <div class="container-fluid">
-            <a class="navbar-brand fw-bold text-white" href="home.php">YardPro Admin</a>
+            <a class="navbar-brand fw-bold text-white" href="/YardProProject/?route=admin/home">YardPro Admin</a>
 
-            <form class="d-flex ms-auto me-3" method="GET" action="">
+            <form class="d-flex ms-auto me-3" method="GET" action="/YardProProject/index.php">
+                <input type="hidden" name="route" value="admin/home">
                 <input class="form-control search-input" type="search" name="q" placeholder="Search centers..."
                     value="<?= isset($_GET['q']) ? htmlspecialchars($_GET['q']) : '' ?>">
                 <button class="search-btn ms-2" type="submit">Go</button>
             </form>
 
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link text-white" href="addServiceCenter.php">Add</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="editServiceCenter.php">Edit</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="deleteServiceCenter.php">Delete</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="registerEmployee.php">Register</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="viewAllBookings.php">Bookings</a></li>
-                <li class="nav-item"><a class="nav-link text-warning" href="logout.php">Logout</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="/YardProProject/?route=admin/add-service-center">Add</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="/YardProProject/?route=admin/edit-service-center">Edit</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="/YardProProject/?route=admin/delete-service-center">Delete</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="/YardProProject/?route=admin/register-employee">Register</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="/YardProProject/?route=admin/view-bookings">Bookings</a></li>
+                <li class="nav-item"><a class="nav-link text-warning" href="/YardProProject/?route=admin/logout">Logout</a></li>
             </ul>
         </div>
     </nav>
@@ -138,7 +136,7 @@ $timings = $controller->getTimings($center['center_id']);
             msg.style.opacity = "0";
             setTimeout(() => msg.remove(), 500);
         }
-    }, 3000);
+    }, 2000);
     </script>
 </body>
 

@@ -16,7 +16,6 @@ $center = $controller->getServiceCenter($center_id);
 if (!$center) die("Service center not found");
 
 // Handle booking submit
-$message = "";
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['confirm_booking'])) {
 
     $data = $_POST;
@@ -27,12 +26,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['confirm_booking'])) {
     $result = $controller->processBooking($user_id, $center_id, $data);
 
     if ($result === "success") {
-        header("Location: /YardProProject/?route=user/view-bookings&msg=Booking+successful");
+        setFlash('success', 'Booking created successfully!');
+        header("Location: /YardProProject/?route=user/view-bookings");
         exit;
     } elseif ($result === "Slot Full") {
-        $message = "This time slot is full. Choose another time.";
+        setFlash('warning', 'This time slot is full. Choose another time.');
     } else {
-        $message = "Something went wrong.";
+        setFlash('danger', 'Something went wrong.');
     }
 }
 
@@ -51,9 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['confirm_booking'])) {
 
     <h2>Book Service</h2>
 
-    <?php if (!empty($message)): ?>
-        <p class="error"><?= htmlspecialchars($message) ?></p>
-    <?php endif; ?>
+    <?php showFlash(); ?>
 <button id="toggleBookForm" class="btn btn-primary" style="margin-bottom: 10px;">
     Show / Hide Booking Form
 </button>
@@ -184,6 +182,16 @@ $(document).ready(function(){
     });
 
 });
+
+// Flash message auto-hide
+setTimeout(() => {
+    const msg = document.querySelector('.flash-message');
+    if (msg) {
+        msg.style.transition = "opacity 0.5s";
+        msg.style.opacity = "0";
+        setTimeout(() => msg.remove(), 500);
+    }
+}, 2000);
 </script>
 
 

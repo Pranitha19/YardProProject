@@ -1,7 +1,5 @@
 <?php
-session_start();
-require_once '../../controllers/AdminController.php';
-require_once '../../helpers/flash.php';
+// Controllers and helpers already loaded by index.php
 
 $controller = new AdminController();
 $centers    = $controller->getAllCenters();
@@ -33,7 +31,7 @@ if (isset($_POST['update'])) {
 
     if ($controller->updateServiceCenter($centerData, $timings)) {
         setFlash('success', 'Service Center updated successfully!');
-        header('Location: editServiceCenter.php');
+        header('Location: /YardProProject/?route=admin/edit-service-center');
         exit();
     } else {
         setFlash('danger', 'Failed to update Service Center.');
@@ -129,7 +127,7 @@ if (isset($_GET['center_id']) && !empty($_GET['center_id'])) {
             </div>
 
             <button name="update" class="btn btn-success">Update</button>
-            <a href="home.php" class="btn btn-secondary">Back</a>
+            <a href="/YardProProject/?route=admin/home" class="btn btn-secondary">Back</a>
         </form>
     </div>
 
@@ -154,7 +152,7 @@ if (isset($_GET['center_id']) && !empty($_GET['center_id'])) {
             if (!id) return;
 
             $.ajax({
-                url: 'editServiceCenter.php',
+                url: '/YardProProject/?route=admin/edit-service-center',
                 method: 'GET',
                 data: { center_id: id },
                 dataType: 'json',

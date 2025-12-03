@@ -2,12 +2,9 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-session_start();
 
-
-require_once '../../config/pdo.php';
-require_once '../../controllers/AdminController.php';
-require_once '../../helpers/flash.php';
+// PDO, AdminController, and helpers are already loaded by index.php
+// No need to require them again
 
 $controller = new AdminController();
 
@@ -20,12 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $adminRow = $controller->login($email, $password);
 
     if ($adminRow) {
-        $_SESSION['admin_logged_in'] = true;
+        $_SESSION['admin_id'] = $adminRow['admin_id'];
         $_SESSION['admin_email']     = $adminRow['email'] ?? $email;
         $_SESSION['admin_name']      = $adminRow['name'] ?? 'Admin';
-
-        setFlash('success', 'Admin logged in successfully!');
-        header('Location: home.php');
+        setFlash('success', 'Logged in successfully as Admin.');
+        header('Location: /YardProProject/?route=admin/home');
         exit();
     }
 
@@ -35,17 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $employee = $stmt->fetch();
 
     if ($employee && password_verify($password, $employee['password_hash'])) {
-        $_SESSION['employee_logged_in'] = true;
         $_SESSION['employee_id']        = $employee['employee_id'];
         $_SESSION['employee_name']      = $employee['name'];
-
-        setFlash('success', 'Employee logged in successfully!');
-        header('Location: ../employee/home.php');
+        setFlash('success', 'Logged in successfully as Employee.');
+        header('Location: /YardProProject/?route=employee/home');
         exit();
     }
-
-    //If both fail
-    setFlash('danger', 'Invalid email or password!');
 }
 ?>
 <!DOCTYPE html>

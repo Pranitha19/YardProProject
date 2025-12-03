@@ -1,10 +1,8 @@
 <?php
-session_start();
-require_once '../../controllers/AdminController.php';
-require_once '../../helpers/flash.php';
+// Controllers and helpers already loaded by index.php
 
-if (!isset($_SESSION['admin_logged_in'])) {
-    header('Location: login.php');
+if (!isset($_SESSION['admin_id'])) {
+    header('Location: /YardProProject/?route=admin/login');
     exit();
 }
 
@@ -14,11 +12,11 @@ $centers    = $controller->getAllCenters();
 if (isset($_POST['delete'])) {
     if ($controller->deleteServiceCenter($_POST['center_id'])) {
         setFlash('success', 'Service Center deleted successfully!');
-        header('Location: deleteServiceCenter.php');
+        header('Location: /YardProProject/?route=admin/delete-service-center');
         exit();
     } else {
         setFlash('danger', 'Error deleting Service Center!');
-        header('Location: deleteServiceCenter.php');
+        header('Location: /YardProProject/?route=admin/delete-service-center');
         exit();
     }
 }
@@ -49,7 +47,7 @@ if (isset($_POST['delete'])) {
             </select>
 
             <button name="delete" class="btn btn-danger">Delete</button>
-            <a href="home.php" class="btn btn-secondary">Back</a>
+            <a href="/YardProProject/?route=admin/home" class="btn btn-secondary">Back</a>
         </form>
     </div>
 
@@ -61,7 +59,7 @@ if (isset($_POST['delete'])) {
             msg.style.opacity = "0";
             setTimeout(() => msg.remove(), 500);
         }
-    }, 3000);
+    }, 2000);
     </script>
 </body>
 

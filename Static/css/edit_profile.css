@@ -67,3 +67,36 @@ body {
   text-align: center;
   margin-bottom: 10px;
 }
+
+/* Flash Messages */
+.flash-message {
+  margin-bottom: 15px !important;
+  border-radius: 6px !important;
+  padding: 12px !important;
+  text-align: center;
+  font-weight: 500;
+}
+
+.alert-success {
+  background-color: #d4edda !important;
+  color: #155724 !important;
+  border-color: #c3e6cb !important;
+}
+
+.alert-danger {
+  background-color: #f8d7da !important;
+  color: #721c24 !important;
+  border-color: #f5c6cb !important;
+}
+
+.alert-warning {
+  background-color: #fff3cd !important;
+  color: #856404 !important;
+  border-color: #ffeeba !important;
+}
+
+.alert-info {
+  background-color: #d1ecf1 !important;
+  color: #0c5460 !important;
+  border-color: #bee5eb !important;
+}

@@ -1,10 +1,9 @@
 <?php
 session_start();
-require_once '../../controllers/AdminController.php';
-require_once '../../helpers/flash.php';
+// Controllers and helpers already loaded by index.php
 
-if (!isset($_SESSION['admin_logged_in'])) {
-    header('Location: login.php');
+if (!isset($_SESSION['admin_id'])) {
+    header('Location: /YardProProject/?route=admin/login');
     exit();
 }
 
@@ -19,6 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $controller->updateBookingStatus($booking_id, $status);
 
     setFlash('success', "Booking #$booking_id updated successfully!");
-    header('Location: viewAllBookings.php');
+    header('Location: /YardProProject/?route=admin/view-bookings');
     exit();
 }

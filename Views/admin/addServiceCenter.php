@@ -1,8 +1,6 @@
 <?php
 
-session_start();
-require_once '../../controllers/AdminController.php';
-require_once '../../helpers/flash.php';
+// Controllers and helpers already loaded by index.php
 
 $controller = new AdminController();
 
@@ -39,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // PRG
-    header('Location: addServiceCenter.php');
+    header('Location: /YardProProject/?route=admin/add-service-center');
     exit();
 }
 ?>
@@ -111,10 +109,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <button class="btn btn-success">Add Center</button>
-            <a href="home.php" class="btn btn-secondary">Back</a>
+            <a href="/YardProProject/?route=admin/home" class="btn btn-secondary">Back</a>
         </form>
-    </div>
-
+                        </div>
     <script>
     document.querySelectorAll('.day-open').forEach(cb => {
         const row = cb.closest('tr');
@@ -128,17 +125,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         cb.addEventListener('change', sync);
         sync();
     });
-<script>
-setTimeout(() => {
+    <script>
+    setTimeout(() => {
         const msg = document.querySelector('.flash-message');
         if (msg) {
             msg.style.transition = "opacity 0.5s";
             msg.style.opacity = "0";
             setTimeout(() => msg.remove(), 500);
         }
-    }, 3000);
-</script>
-
+    }, 2000);
+    </script>
 </body>
-
 </html>

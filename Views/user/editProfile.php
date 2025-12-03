@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../../session_guard.php';
+require_once __DIR__ . '/../../helpers/flash.php';
 require_once __DIR__ . '/../../Controllers/UserController.php';
 
 $controller = new UserController();
@@ -10,7 +11,8 @@ $user = $controller->getUserDetails($user_id);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $controller->updateProfile($user_id, $_POST);
-    header("Location: /YardProProject/?route=user/edit-profile&msg=Profile updated successfully");
+    setFlash('success', 'Profile updated successfully!');
+    header("Location: /YardProProject/?route=user/edit-profile");
     exit;
 }
 
@@ -21,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
   <meta charset="UTF-8">
   <title>Edit Profile - YardPro</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/YardProProject/Static/css/edit_profile.css">
 </head>
 <body>
@@ -32,11 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div class="edit-container">
     <h2>Edit Profile</h2>
 
-    <?php if (!empty($_GET['msg'])): ?>
-      <p class="success"><?= htmlspecialchars($_GET['msg']) ?></p>
-    <?php elseif (!empty($error)): ?>
-      <p class="error"><?= htmlspecialchars($error) ?></p>
-    <?php endif; ?>
+    <?php showFlash(); ?>
 
     <form method="post">
       <label>First Name</label>
@@ -57,6 +56,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <button type="submit" class="btn-primary">Update Profile</button>
     </form>
   </div>
+
+<script>
+// Flash message auto-hide
+setTimeout(() => {
+    const msg = document.querySelector('.flash-message');
+    if (msg) {
+        msg.style.transition = "opacity 0.5s";
+        msg.style.opacity = "0";
+        setTimeout(() => msg.remove(), 500);
+    }
+}, 2000);
+</script>
 
 </body>
 </html>

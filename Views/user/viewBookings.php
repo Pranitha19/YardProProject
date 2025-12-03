@@ -1,12 +1,13 @@
 <?php
 require_once __DIR__ . '/../../session_guard.php';
+require_once __DIR__ . '/../../helpers/flash.php';
 require_once __DIR__ . '/../../Controllers/UserController.php';
 
 $controller = new UserController();
 $user_id = $_SESSION['user_id'] ?? null;
 
 if (!$user_id) {
-    header("Location: login.php");
+    header("Location: /YardProProject/?route=user/login");
     exit;
 }
 
@@ -22,23 +23,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_id'])) {
 
     switch ($result) {
         case "success":
-            header("Location: viewBookings.php?toast=cancel_success");
+            setFlash('success', 'Booking cancelled successfully. Your refund will be processed in 5 days.');
+            header("Location: /YardProProject/?route=user/view-bookings");
             exit;
 
         case "past":
-            header("Location: viewBookings.php?toast=late_cancel");
+            setFlash('warning', 'You can cancel only before 24 hours.');
+            header("Location: /YardProProject/?route=user/view-bookings");
             exit;
 
         case "not_allowed":
-            header("Location: viewBookings.php?toast=not_allowed");
+            setFlash('danger', 'This booking cannot be cancelled.');
+            header("Location: /YardProProject/?route=user/view-bookings");
             exit;
 
         case "not_found":
-            header("Location: viewBookings.php?toast=not_found");
+            setFlash('danger', 'Booking not found.');
+            header("Location: /YardProProject/?route=user/view-bookings");
             exit;
 
         default:
-            header("Location: viewBookings.php?toast=error");
+            setFlash('danger', 'An error occurred.');
+            header("Location: /YardProProject/?route=user/view-bookings");
             exit;
     }
 }
@@ -65,9 +71,7 @@ $bookings = $controller->getUserBookings($user_id);
 <div class="booking-container">
     <h2>My Bookings</h2>
 
-    <?php if (isset($_GET['msg'])): ?>
-        <p class="success"><?= htmlspecialchars($_GET['msg']) ?></p>
-    <?php endif; ?>
+    <?php showFlash(); ?>
 
     <?php if (empty($bookings)): ?>
         <p>No bookings found.</p>
@@ -147,60 +151,19 @@ $bookings = $controller->getUserBookings($user_id);
     <?php endif; ?>
 </div>
 
-<!-- SUCCESS TOAST -->
-<?php if (isset($_GET['toast']) && $_GET['toast'] === 'cancel_success'): ?>
-<div class="position-fixed top-0 end-0 p-3" style="z-index:1055;">
-    <div id="cancelToast" class="toast text-bg-success border-0" role="alert">
-        <div class="d-flex">
-            <div class="toast-body">Your refund will be processed in 5 days.</div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                    data-bs-dismiss="toast"></button>
-        </div>
-    </div>
-</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    new bootstrap.Toast(document.getElementById("cancelToast")).show();
-});
+// Flash message auto-hide
+setTimeout(() => {
+    const msg = document.querySelector('.flash-message');
+    if (msg) {
+        msg.style.transition = "opacity 0.5s";
+        msg.style.opacity = "0";
+        setTimeout(() => msg.remove(), 500);
+    }
+}, 2000);
 </script>
-<?php endif; ?>
-
-<!-- LATE CANCEL TOAST -->
-<?php if (isset($_GET['toast']) && $_GET['toast'] === 'late_cancel'): ?>
-<div class="toast show text-bg-warning border-0"
-     style="position: fixed; top:20px; right:20px;">
-    <div class="d-flex">
-        <div class="toast-body">You can cancel only before 24 hours.</div>
-        <button type="button" class="btn-close me-2 m-auto"></button>
-    </div>
-</div>
-<?php endif; ?>
-
-<!-- NOT ALLOWED TOAST -->
-<?php if (isset($_GET['toast']) && $_GET['toast'] === 'not_allowed'): ?>
-<div class="toast show text-bg-danger border-0"
-     style="position: fixed; top:20px; right:20px;">
-    <div class="d-flex">
-        <div class="toast-body">This booking cannot be cancelled.</div>
-        <button type="button" class="btn-close me-2 m-auto"></button>
-    </div>
-</div>
-<?php endif; ?>
-
-<!-- NOT FOUND -->
-<?php if (isset($_GET['toast']) && $_GET['toast'] === 'not_found'): ?>
-<div class="toast show text-bg-danger border-0"
-     style="position: fixed; top:20px; right:20px;">
-    <div class="d-flex">
-        <div class="toast-body">Booking not found.</div>
-        <button type="button" class="btn-close me-2 m-auto"></button>
-    </div>
-</div>
-<?php endif; ?>
-
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
