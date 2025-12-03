@@ -60,13 +60,13 @@ $(document).ready(function(){
 
         if(email === "" || password === ""){
             alert("Email and Password cannot be empty!");
-            e.preventDefault(); // stop form submit
+            e.preventDefault(); 
         }
     });
 
 });
 
-// Flash message auto-hide
+// Flash message
 setTimeout(() => {
     const msg = document.querySelector('.flash-message');
     if (msg) {

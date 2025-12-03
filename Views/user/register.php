@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
 <script>
-// Flash message auto-hide
+// Flash message 
 setTimeout(() => {
     const msg = document.querySelector('.flash-message');
     if (msg) {

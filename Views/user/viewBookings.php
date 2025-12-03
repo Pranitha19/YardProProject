@@ -11,9 +11,6 @@ if (!$user_id) {
     exit;
 }
 
-/* -------------------------------------------------------
-      CANCEL BOOKING HANDLER (POST)
---------------------------------------------------------*/
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_id'])) {
 
     $booking_id = $_POST['cancel_id'];
@@ -48,10 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_id'])) {
             exit;
     }
 }
-
-/* -------------------------------------------------------
-      FETCH USER BOOKINGS
---------------------------------------------------------*/
 $bookings = $controller->getUserBookings($user_id);
 ?>
 <!DOCTYPE html>
@@ -108,11 +101,10 @@ $bookings = $controller->getUserBookings($user_id);
     <?php if ($b['status'] === 'Requested'): ?>
 
         <?php if ($hoursLeft > 24): ?>
-            <!-- EDIT -->
+            
             <a href="/YardProProject/Views/user/editBooking.php?id=<?= $b['booking_id'] ?>"
                class="btn btn-warning btn-sm">Edit</a>
 
-            <!-- CANCEL -->
             <form method="post" style="display:inline;">
                 <input type="hidden" name="cancel_id" value="<?= $b['booking_id'] ?>">
                 <button type="submit" class="btn btn-danger btn-sm"

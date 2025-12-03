@@ -1,17 +1,13 @@
 <?php
-/**
- * YardPro - Front Controller / Router
- * This file acts as the main entry point for the application
- * Handles routing, authentication, and request dispatching
- */
+
 session_start();
-// Define base paths
+//base paths
 define('BASE_PATH', __DIR__);
 define('CONTROLLERS_PATH', BASE_PATH . '/Controllers');
 define('VIEWS_PATH', BASE_PATH . '/Views');
 define('MODELS_PATH', BASE_PATH . '/Models');
 
-// Include required files
+//required files
 require_once BASE_PATH . '/config/pdo.php';
 require_once BASE_PATH . '/helpers/flash.php';
 require_once CONTROLLERS_PATH . '/UserController.php';
@@ -61,44 +57,38 @@ if ($userType === 'user') {
         exit;
     }
 
-    // Route: User home/dashboard
     if ($page === 'home' || $page === null) {
         include VIEWS_PATH . '/user/home.php';
         exit;
     }
 
-    // Route: Book service
     if ($page === 'book-service') {
         include VIEWS_PATH . '/user/bookService.php';
         exit;
     }
 
-    // Route: View bookings
     if ($page === 'view-bookings') {
         include VIEWS_PATH . '/user/viewBookings.php';
         exit;
     }
 
-    // Route: Edit booking
     if ($page === 'edit-booking') {
         include VIEWS_PATH . '/user/editBooking.php';
         exit;
     }
 
-    // Route: Edit profile
     if ($page === 'edit-profile') {
         include VIEWS_PATH . '/user/editProfile.php';
         exit;
     }
 
-    // Route: Fetch slots (AJAX endpoint)
     if ($page === 'fetch-slots') {
         include VIEWS_PATH . '/user/fetch_slots.php';
         exit;
     }
 }
-//Admin routes
 
+//Admin routes
 // Route: Admin Login page (accessible without authentication)
 if ($userType === 'admin' && $page === 'login') {
     include VIEWS_PATH . '/admin/login.php';
@@ -120,43 +110,35 @@ if ($userType === 'admin') {
         exit;
     }
 
-    // Route: Admin home/dashboard
     if ($page === 'home' || $page === null) {
         include VIEWS_PATH . '/admin/home.php';
         exit;
     }
 
-    // Route: View all bookings
     if ($page === 'view-bookings') {
         include VIEWS_PATH . '/admin/viewAllBookings.php';
         exit;
     }
 
-    // Route: Update booking status
     if ($page === 'update-booking') {
         include VIEWS_PATH . '/admin/updateBooking.php';
         exit;
     }
 
-    // Route: Add service center
     if ($page === 'add-service-center') {
         include VIEWS_PATH . '/admin/addServiceCenter.php';
         exit;
     }
-
-    // Route: Edit service center
     if ($page === 'edit-service-center') {
         include VIEWS_PATH . '/admin/editServiceCenter.php';
         exit;
     }
 
-    // Route: Delete service center
     if ($page === 'delete-service-center') {
         include VIEWS_PATH . '/admin/deleteServiceCenter.php';
         exit;
     }
 
-    // Route: Register employee
     if ($page === 'register-employee') {
         include VIEWS_PATH . '/admin/registerEmployee.php';
         exit;
@@ -164,7 +146,6 @@ if ($userType === 'admin') {
 }
 
 //Employee routes
-
 // Route: Employee Login page (accessible without authentication)
 if ($userType === 'employee' && $page === 'login') {
     include VIEWS_PATH . '/employee/login.php';
@@ -186,34 +167,27 @@ if ($userType === 'employee') {
         exit;
     }
 
-    // Route: Employee home/dashboard
     if ($page === 'home' || $page === null) {
         include VIEWS_PATH . '/employee/home.php';
         exit;
     }
 
-    // Route: View assigned requests
     if ($page === 'view-requests') {
         include VIEWS_PATH . '/employee/viewRequest.php';
         exit;
     }
 
-    // Route: Update request status
     if ($page === 'update-status') {
         include VIEWS_PATH . '/employee/updateStatus.php';
         exit;
     }
 
-    // Route: Edit profile
     if ($page === 'edit-profile') {
         include VIEWS_PATH . '/employee/editProfile.php';
         exit;
     }
 }
 
-/**
- * ==================== HOME / LANDING PAGE ====================
- */
 
 // Default route - landing page (accessible to all)
 if ($request === '' || $userType === null) {
@@ -235,8 +209,6 @@ if ($request === '' || $userType === null) {
     </head>
 
     <body>
-
-        <!-- Navbar -->
         <div class="navbar">
             <div class="logo">
                 <img src="/YardProProject/Static/images/lawn_logo.png" alt="YardPro" class="logo-img">
@@ -248,8 +220,6 @@ if ($request === '' || $userType === null) {
                 <a href="/YardProProject/?route=user/login" class="btn btn-login">Login</a>
             </div>
         </div>
-
-        <!-- Hero Section -->
         <section class="hero">
             <div class="hero-content">
                 <h1>Welcome to <span>YardPro</span></h1>

@@ -40,7 +40,6 @@ class UserController {
 
     public function updateProfile($user_id, $data) {
 
-    // Build the payload that matches the model method
     $payload = [
         'user_id'    => $user_id,
         'first_name' => trim($data['first_name']),
@@ -80,6 +79,10 @@ class UserController {
 
     public function isSlotTaken($center_id, $date, $time, $exclude = null) {
         return $this->userModel->isSlotTaken($center_id, $date, $time, $exclude);
+    }
+
+    public function getAvailableSlots($center_id, $date) {
+        return $this->userModel->getAvailableSlots($center_id, $date);
     }
 
     public function processBooking($user_id, $center_id, $data) {

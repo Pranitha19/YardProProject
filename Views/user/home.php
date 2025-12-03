@@ -7,7 +7,6 @@ $controller = new UserController();
 // get search value
 $search = isset($_GET['search']) ? trim($_GET['search']) : "";
 
-// fetch service centers through controller (MVC clean)
 $centers = $controller->getServiceCenters($search);
 ?>
 <!DOCTYPE html>
@@ -21,7 +20,6 @@ $centers = $controller->getServiceCenters($search);
 
 <?php include __DIR__ . '/../shared/navbar.php'; ?>
 
-<!-- Search Bar -->
 <div class="search-bar">
     <form method="get" action="/YardProProject/index.php">
         <input type="hidden" name="route" value="user/home">
@@ -32,7 +30,6 @@ $centers = $controller->getServiceCenters($search);
     </form>
 </div>
 
-<!-- Service Center Cards -->
 <div class="card-container">
     <?php if (empty($centers)): ?>
         <p class="no-results">
@@ -64,7 +61,7 @@ $centers = $controller->getServiceCenters($search);
 </div>
 
 <script>
-// Flash message auto-hide
+// Flash message 
 setTimeout(() => {
     const msg = document.querySelector('.flash-message');
     if (msg) {
