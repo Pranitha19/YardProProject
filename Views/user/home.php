@@ -1,6 +1,6 @@
 <?php
+require_once __DIR__ . '/../../helpers/flash.php';
 require_once __DIR__ . '/../../Controllers/UserController.php';
-
 $controller = new UserController();
 
 // get search value
@@ -13,12 +13,13 @@ $centers = $controller->getServiceCenters($search);
 <head>
     <meta charset="UTF-8">
     <title>User Home - YardPro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/YardProProject/Static/css/user.css">
 </head>
 <body>
 
 <?php include __DIR__ . '/../shared/navbar.php'; ?>
-
+ <?php showFlash(); ?>
 <div class="search-bar">
     <form method="get" action="/YardProProject/index.php">
         <input type="hidden" name="route" value="user/home">

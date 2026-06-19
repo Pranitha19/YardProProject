@@ -13,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($user) {
         $_SESSION['user_id'] = $user['user_id'];
+        setFlash('success', 'Logged in successfully.');
         header("Location: /YardProProject/?route=user/home");
         exit;
     } else {
